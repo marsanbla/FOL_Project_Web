@@ -272,10 +272,11 @@ var app = new Vue({
   },
 });
 
-const sideMenu = document.querySelector("aside");
+const sideMenu = document.querySelector("#sidebar"); // en vez de sidemenu era aside
 const menubtn = document.querySelector("#menu-btn");
 const closeBtn = document.querySelector("#close-btn");
 const tema = document.querySelector(".tema");
+const dashbtn = document.querySelector("#dash");
 
 menubtn.addEventListener("click", () => {
   sideMenu.style.display = "block";
@@ -284,7 +285,9 @@ menubtn.addEventListener("click", () => {
 closeBtn.addEventListener("click", () => {
   sideMenu.style.display = "none";
 });
-
+dashbtn.addEventListener("click",()=>{
+  alert("hello")
+})
 tema.addEventListener("click", () => {
   document.body.classList.toggle("dark-theme-variables");
 

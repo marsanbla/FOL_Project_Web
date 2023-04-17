@@ -313,3 +313,28 @@ function changeTab(evt, tabName){
   evt.currentTarget.classList.add("active");
   console.log("clicked button");
 }
+//ChartJS
+// Retrieve data from server
+fetch('/data')
+  .then(response => response.json())
+  .then(data => {
+    // Format data for Chart.js
+    const chartData = {
+      labels: data.map(item => item.label),
+      datasets: [{
+        label: 'My Dataset',
+        data: data.map(item => item.value),
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    };
+    // Create Chart.js chart
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: chartData,
+      options: {}
+    });
+  })
+  .catch(error => console.error(error));

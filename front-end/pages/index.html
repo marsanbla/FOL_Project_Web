@@ -36,28 +36,28 @@
           </div>
         </div>
 
-        <div class="sidebar">
+        <div class="tab-buttons">
           <a href="#">
             <span class="material-icons-sharp">grid_view</span>
-            <button id="dash">Dashboard</button>
+            <button class="tab-button active"  onclick="changeTab(event, 'tab-1')">Dashboard</button>
           </a>
           <a href="#">
             <span class="material-icons-sharp">group</span>
-            <h3>Users Admin</h3>
+            <button class="tab-button"  onclick="changeTab(event, 'tab-2')">Users Admin</button>
           </a>
-          <a href="#" class="active">
+          <a href="#">
             <span class="material-icons-sharp">query_stats</span>
-            <h3>Stats</h3>
+            <button class="tab-button"  onclick="changeTab(event, 'tab-3')">Stats</button>
           </a>
           <a href="#">
             <span class="material-icons-sharp"> sports_esports </span>
 
-            <h3>Jugabilitat</h3>
+            <button class="tab-button"  onclick="changeTab(event, 'tab-4')">Gameplay</button>
           </a>
           <a href="#">
             <span class="material-icons-sharp"> settings </span>
 
-            <h3>Settings</h3>
+            <button class="tab-button"  onclick="changeTab(event, 'tab-5')">Settings</button>
           </a>
           <a href="#">
             <span class="material-icons-sharp"> logout </span>
@@ -68,6 +68,8 @@
       </aside>
       <!--Centro-->
       <main>
+      <div class="tab-content">
+        <div id="tab-1" class="tab-pane active">
         <h1>Dashboard</h1>
         <div class="date">
           <input type="date" />
@@ -155,6 +157,14 @@
             </tbody>
           </table>
           <a href="#">Show All</a>
+        </div>
+      </div>
+        <div id="tab-2" class="tab-pane"> test2</div>
+        <div id="tab-3" class="tab-pane"> test3</div>
+        <div id="tab-4" class="tab-pane"> test4</div>
+        <div id="tab-5" class="tab-pane"> test5</div>
+     
+        
         </div>
       </main>
 

@@ -294,3 +294,22 @@ tema.addEventListener("click", () => {
   tema.querySelector("span:nth-child(1)").classList.toggle("active");
   tema.querySelector("span:nth-child(2)").classList.toggle("active");
 });
+
+
+function changeTab(evt, tabName){
+  var i,tabPane,tabButton;
+  tabPane= document.getElementsByClassName("tab-pane");
+
+  for(i=0; i<tabPane.length;i++){
+    tabPane[i].style.display = "none";
+  }
+
+  tabButton=document.getElementsByClassName("tab-button");
+  for(i=0; i<tabButton.length;i++){
+    tabButton[i].classList.remove("active");
+  }
+
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.classList.add("active");
+  console.log("clicked button");
+}

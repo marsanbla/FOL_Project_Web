@@ -159,7 +159,31 @@
           <a href="#">Show All</a>
         </div>
       </div>
-        <div id="tab-2" class="tab-pane"> test2</div>
+        <div id="tab-2" class="tab-pane"> <table class="default">
+
+          <tr>
+
+              <th class="nomus">Nom usuari</th>
+
+              <th>Rol</th>
+
+
+          </tr>
+
+          <tr v-for="(u,index) in usuaris" :key="u.name">
+
+              <td>{{index}}</td>
+
+              <td>{{u.name}}</td>
+
+              <td>{{u.rol}} </td>
+
+              <td><v-btn color="success" class="mr-4" @click="deletePost(u.name,u.rol)">X</v-btn></td>
+
+
+          </tr>
+      </table>
+        </div>
         <div id="tab-3" class="tab-pane"> test3</div>
         <div id="tab-4" class="tab-pane"> test4</div>
         <div id="tab-5" class="tab-pane"> test5</div>

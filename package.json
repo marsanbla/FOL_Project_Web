@@ -1,0 +1,27 @@
+{
+  "name": "fol_project_web",
+  "version": "1.0.0",
+  "description": "Paquetes para que funcione el programa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marsanbla/FOL_Project_Web.git"
+  },
+  "author": "mario,joan,adam,jofre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marsanbla/FOL_Project_Web/issues"
+  },
+  "homepage": "https://github.com/marsanbla/FOL_Project_Web#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "session": "^0.1.0",
+    "socketio": "^1.0.0"
+  }
+}

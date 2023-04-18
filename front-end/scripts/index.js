@@ -338,3 +338,15 @@ fetch('/data')
     });
   })
   .catch(error => console.error(error));
+//Dificulty 
+
+  const difficultySelector = document.querySelector('.difficulty-selector');
+const radios = difficultySelector.querySelectorAll('input[type="radio"]');
+let selectedDifficulty;
+
+radios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    selectedDifficulty = radio.value;
+    console.log(`La dificultad seleccionada es: ${selectedDifficulty}`);
+  });
+});

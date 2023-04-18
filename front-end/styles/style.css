@@ -409,6 +409,33 @@
         color: var(--color-primary);
     }
 
+    .difficulty-selector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px;
+        font-size: 18px;
+      }
+      
+      .difficulty-selector input[type="radio"] {
+        display: none;
+      }
+      
+      .difficulty-selector label {
+        margin: 0 10px;
+        cursor: pointer;
+      }
+      
+      .difficulty-selector label:hover {
+        color: #0077cc;
+      }
+      
+      .difficulty-selector input[type="radio"]:checked + label {
+        font-weight: bold;
+        color: #0077cc;
+      }
+      
+
     .right {
         margin-top: 1.4rem;
 

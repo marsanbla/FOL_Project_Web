@@ -179,11 +179,10 @@ app.post("/authPost", async (req, res) => {
 //Ruta a /logOutPost amb dos parametres que s'envien per "param"
 app.get("/getGameVariables", async (req, res) => {
 
-    let zombieSpeed = 1;
+ 
     let playerSpeed = 1;
 
 
-    res.send(JSON.stringify(zombieSpeed));
 
 });
 
@@ -399,9 +398,6 @@ function afegirSettings(){
     
     newSettings={
         identificacio:1,
-        zombieMaxHealth:100,
-        zombieDamage:10,
-        zombieSpeed:1,
         playerSpeed:20,
         playerMaxHealth:100,
         playerFireRate:0.1
@@ -436,9 +432,6 @@ app.post("/updateSettingsPost",async (req,res)=>{
     console.log("Ha entrat a update post");
 
     let newSettings = {
-        zombieMaxHealth:req.body.zombieHealth,
-        zombieDamage:req.body.zombieDamage,
-        zombieSpeed:req.body.zombieSpeed,
         playerSpeed:req.body.playerSpeed,
         playerMaxHealth:req.body.playerHealth,
         playerFireRate:req.body.playerFireRate     

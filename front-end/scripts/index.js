@@ -12,80 +12,21 @@ var app = new Vue({
     postData: null,
     auth: true,
     tab: null,
-    verpagina: true,
-    characters: false,
-    settings: false,
-    stats: false,
-    loginpage: false,
     users: false,
     usuaris: [],
-    zombiespeed: null,
-    zombiehealth: null,
-    zombiedamage: null,
     playerspeed: null,
     playerhealth: null,
     playerFireRate: null,
     playerdialog: false,
-    zombiedialog: false,
+
   },
 
   methods: {
-    enterpage: function () {
-      this.characters = false;
-      this.settings = false;
-      this.stats = false;
-      this.users = false;
-      if (this.auth == true) {
-        this.verpagina = true;
-      } else if (this.auth == false) {
-        this.loginpage = true;
-      }
-    },
-    usersclick: function () {
-      this.characters = false;
-      this.settings = false;
-      this.stats = false;
-      this.loginpage = false;
-      this.verpagina = false;
-      this.users = true;
-    },
-
-    charactersclick: function () {
-      this.characters = true;
-      this.settings = false;
-      this.stats = false;
-      this.loginpage = false;
-      this.verpagina = false;
-    },
-    settingsclick: function () {
-      console.log("Users click", this.users);
-      this.characters = false;
-      this.settings = true;
-      this.stats = false;
-      this.loginpage = false;
-      this.verpagina = false;
-    },
-    statsclick: function () {
-      this.characters = false;
-      this.settings = false;
-      this.stats = true;
-      this.loginpage = false;
-      this.verpagina = false;
-    },
-
     deletePost: function (nomUsuari, rol) {
       let callback = () => {
         console.log("Ha entrat a delete post");
 
         this.usersPost();
-        this.characters = false;
-        this.settings = false;
-        this.stats = false;
-        this.verpagina = false;
-        this.users = true;
-        this.snackbar = true;
-        this.loginpage = false;
-
         this.usuaris = this.postData;
 
         console.log("usuaris del post data dins userpost", this.postData);
@@ -121,11 +62,6 @@ var app = new Vue({
 
         this.loading = false;
 
-        this.zombiedamage = this.postData.zombieDamage;
-        console.log("Zomb dmg: ", this.zombiedamage);
-        this.zombiehealth = this.postData.zombieMaxHealth;
-        this.zombiespeed = this.postData.zombieSpeed;
-
         this.playerFireRate = this.postData.playerFireRate;
         this.playerhealth = this.postData.playerMaxHealth;
         this.playerspeed = this.postData.playerSpeed;
@@ -134,9 +70,6 @@ var app = new Vue({
       this.doFetchPost(
         "http://localhost:3000/updateSettingsPost",
         {
-          zombieSpeed: this.zombiespeed,
-          zombieDamage: this.zombiedamage,
-          zombieHealth: this.zombiehealth,
           playerSpeed: this.playerspeed,
           playerFireRate: this.playerFireRate,
           playerHealth: this.playerhealth,
@@ -154,12 +87,6 @@ var app = new Vue({
         this.verpagina = false;
 
         this.loading = false;
-
-        this.zombiedamage = this.postData.zombieDamage;
-        console.log("Zomb dmg: ", this.zombiedamage);
-        this.zombiehealth = this.postData.zombieMaxHealth;
-        this.zombiespeed = this.postData.zombieSpeed;
-
         this.playerFireRate = this.postData.playerFireRate;
         this.playerhealth = this.postData.playerMaxHealth;
         this.playerspeed = this.postData.playerSpeed;

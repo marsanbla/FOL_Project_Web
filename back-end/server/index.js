@@ -22,7 +22,7 @@ app.use(express.static('public'));
 
 // Endpoint to retrieve data from MongoDB
 app.get('/data', (req, res) => {
-  MongoClient.connect('mongodb://localhost:27017/mydb', (err, db) => {
+  MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', (err, db) => {
     if (err) throw err;
     db.collection('mycollection').find({}).toArray((err, result) => {
       if (err) throw err;

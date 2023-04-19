@@ -1,4 +1,4 @@
-const settingsCollection = require('../models/settingsSchema');
+const settingsCollection = require('../schema/settingsschema.js');
 
 
 async function newSettingsAsync(settings) {

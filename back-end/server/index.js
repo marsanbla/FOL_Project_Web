@@ -1,7 +1,5 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
-
-const express = require('express');
 const cors = require("cors");
 const fs = require('fs');
 const path = require('path');
@@ -12,10 +10,10 @@ const { Socket } = require('dgram');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
-const playersCollection = require('../models/playerSchema');
-const adminUsers = require('../database/adMongoDBplayers');
-const connexio = require('../database/adPoolMongoDB');
-const adminSettings=require('../database/adMongoDBSettings');
+const playersCollection = require('../schema/userschema.js');
+const adminUsers = require('../db/addu.js');
+const connexio = require('../db/poolmongo.js');
+const adminSettings=require('../db/usersettings.js');
 
 // Serve static files from the public directory
 app.use(express.static('public'));
@@ -36,13 +34,12 @@ app.get('/data', (req, res) => {
 
 
 
-const PORT = 3000;
+const PORT = 3007;
 app.use(bodyParser.json());
 var users = [];
 
 
 let nomUsuari="";
-
 
 
 app.use(session({
@@ -80,6 +77,72 @@ app.use(cors({
         return callback(null, true)
     }
 }));
+//FUNCIO REGISTRO ANDROID
+app.post('/registerUserAndroid', async (req, res) => {
+
+    console.log("Ha entrat a register");
+    
+    connexio.iniciar();
+
+    let nom = req.body.name;
+    let email=req.body.email;
+    let passwd = req.body.password;
+    const saltRounds = 10;
+    let salt;
+
+
+    let player={
+        name: nom,
+        email: email,
+        pwd: passwd,
+        salt:"",
+        rol: "user",
+        /*Player Stats*/
+        investedMinutes: 0,
+        mSesions: 0,
+        zKilled: 0,
+        deads: 0
+    };
+
+
+    let existingUsername = await adminUsers.findPlayerAsync(nom);
+    let existingMail = await adminUsers.findPlayerAsync(nom);
+    let existingUsername2 = await adminUsers.findPlayerAsync(nom);
+    
+
+    console.log("existingUsername: ",existingUsername);
+
+
+    if (existingUsername) {
+ 
+        res.status(400).send({ success: false, message: 'Email already in use' });
+
+
+    }
+    else {
+
+        console.log("Ha entrat al else");
+
+        try {
+            salt = await getSalt(saltRounds);
+            encryptedPass = await hashPassword(passwd, salt);
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+        player.salt=salt;
+        player.pwd=encryptedPass;
+        //player.email=email;
+
+        adminUsers.newPlayerAsync(player);        
+        //console.log('usuari guardat');
+        //res.send({ success: true });
+        res.status(200).send({ success: true });
+
+    }
+});
 
 app.post('/register', async (req, res) => {
 
@@ -108,13 +171,13 @@ app.post('/register', async (req, res) => {
     };
 
 
-    let existingPlayer = await adminUsers.findPlayerAsync(nom);
+    let existingUsername = await adminUsers.findPlayerAsync(nom);
     
 
-    console.log("existingPlayer: ",existingPlayer);
+    console.log("existingUsername: ",existingUsername);
 
 
-    if (existingPlayer) {
+    if (existingUsername) {
  
         res.status(400).send({ success: false, message: 'Email already in use' });
 
@@ -138,7 +201,7 @@ app.post('/register', async (req, res) => {
         //player.email=email;
 
         adminUsers.newPlayerAsync(player);        
-        console.log('usuari guardat');
+        //console.log('usuari guardat');
         //res.send({ success: true });
         res.status(200).send({ success: true });
 
@@ -233,7 +296,6 @@ app.post("/logOutPost", async (req, res) => {
 app.listen(PORT, () => {
     console.log("Server Running [" + PORT + "]");
 });
-
 
 
 async function checkUserFromJson(name, passwd) {

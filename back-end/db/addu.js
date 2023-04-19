@@ -1,5 +1,5 @@
-const playersCollection = require('../models/playerSchema');
-const connexio = require('./adPoolMongoDB');
+const playersCollection = require('../schema/userschema.js');
+const connexio = require('./poolmongo.js');
 
 async function newPlayerAsync(player) {
     let newPlayer = new playersCollection.playerModel();

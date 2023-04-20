@@ -1,508 +1,540 @@
-const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
-const cors = require("cors");
-const fs = require('fs');
-const path = require('path');
-const session = require('express-session');
-const app = express();
-const http = require('http');
-const { Socket } = require('dgram');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcryptjs');
-const playersCollection = require('../schema/userschema.js');
-const adminUsers = require('../db/addu.js');
-const connexio = require('../db/poolmongo.js');
-const adminSettings=require('../db/usersettings.js');
+    const express = require('express');
+    const MongoClient = require('mongodb').MongoClient;
+    const cors = require("cors");
+    const fs = require('fs');
+    const path = require('path');
+    const session = require('express-session');
+    const app = express();
+    const http = require('http');
+    const { Socket } = require('dgram');
+    const mongoose = require('mongoose');
+    const bodyParser = require('body-parser');
+    const bcrypt = require('bcryptjs');
+    const playersCollection = require('../schema/userschema.js');
+    const adminUsers = require('../db/addu.js');
+    const connexio = require('../db/poolmongo.js');
+    const adminSettings=require('../db/usersettings.js');
+    const { notEqual } = require('assert');
 
-// Serve static files from the public directory
-app.use(express.static('public'));
+    // Serve static files from the public directory
+    app.use(express.static('public'));
 
-// Endpoint to retrieve data from MongoDB
-app.get('/data', (req, res) => {
-  MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', (err, db) => {
-    if (err) throw err;
-    db.collection('mycollection').find({}).toArray((err, result) => {
-      if (err) throw err;
-      res.send(result);
-      db.close();
+    // Endpoint to retrieve data from MongoDB
+    app.get('/data', (req, res) => {
+    MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', (err, db) => {
+        if (err) throw err;
+        db.collection('mycollection').find({}).toArray((err, result) => {
+        if (err) throw err;
+        res.send(result);
+        db.close();
+        });
     });
-  });
-});
+    });
 
 
 
 
 
-const PORT = 3007;
-app.use(bodyParser.json());
-var users = [];
+    const PORT = 3012;
+    app.use(bodyParser.json());
+    var users = [];
 
 
-let nomUsuari="";
+    let nomUsuari="";
 
 
-app.use(session({
-    secret: "2002",
-    resave: true,
-    saveUninitialized: true,
-    user: { isAuth: false, roles: [] },
-    users: []
+    app.use(session({
+        secret: "2002",
+        resave: true,
+        saveUninitialized: true,
+        user: { isAuth: false, roles: [] },
+        users: []
 
-}));
+    }));
 
-async function getSalt(saltRounds) {
-    let salt = await bcrypt.genSalt(saltRounds);
-    return salt;
-}
-
-//passwd Hash
-async function hashPassword(passwd, salt) {
-    let hash = await bcrypt.hash(passwd, salt);
-    return hash;
-}
-
-
-//Middleware necessari per parsejar el body i colocar-ho dintre del req.body.
-app.use(express.json());
-
-
-//Configuració del mòdul de cors. 
-//Per cada petició es crida aquest middleware (app.use)
-//rep dos parametres el mòdul cors. El primer és l'origen, i el segon és una funció
-//de callback que ens permet controlar si acceptem la petició o no.
-app.use(cors({
-    origin: function (origin, callback) {
-        console.log(origin);
-        return callback(null, true)
+    async function getSalt(saltRounds) {
+        let salt = await bcrypt.genSalt(saltRounds);
+        return salt;
     }
-}));
-//FUNCIO REGISTRO ANDROID
-app.post('/registerUserAndroid', async (req, res) => {
 
-    console.log("Ha entrat a register");
-    
-    connexio.iniciar();
-
-    let nom = req.body.name;
-    let email=req.body.email;
-    let passwd = req.body.password;
-    const saltRounds = 10;
-    let salt;
-
-
-    let player={
-        name: nom,
-        email: email,
-        pwd: passwd,
-        salt:"",
-        rol: "user",
-        /*Player Stats*/
-        investedMinutes: 0,
-        mSesions: 0,
-        zKilled: 0,
-        deads: 0
-    };
-
-
-    let existingUsername = await adminUsers.findPlayerAsync(nom);
-    let existingMail = await adminUsers.findPlayerAsync(nom);
-    let existingUsername2 = await adminUsers.findPlayerAsync(nom);
-    
-
-    console.log("existingUsername: ",existingUsername);
-
-
-    if (existingUsername) {
- 
-        res.status(400).send({ success: false, message: 'Email already in use' });
-
-
+    //passwd Hash
+    async function hashPassword(passwd, salt) {
+        let hash = await bcrypt.hash(passwd, salt);
+        return hash;
     }
-    else {
 
-        console.log("Ha entrat al else");
 
-        try {
-            salt = await getSalt(saltRounds);
-            encryptedPass = await hashPassword(passwd, salt);
+    //Middleware necessari per parsejar el body i colocar-ho dintre del req.body.
+    app.use(express.json());
 
+
+    //Configuració del mòdul de cors. 
+    //Per cada petició es crida aquest middleware (app.use)
+    //rep dos parametres el mòdul cors. El primer és l'origen, i el segon és una funció
+    //de callback que ens permet controlar si acceptem la petició o no.
+    app.use(cors({
+        origin: function (origin, callback) {
+            console.log(origin);
+            return callback(null, true)
         }
-        catch (error) {
-            console.log(error);
-        }
+    }));
+    //FUNCIO REGISTRO ANDROID
+    app.post('/registerUserAndroid', async (req, res) => {
 
-        player.salt=salt;
-        player.pwd=encryptedPass;
-        //player.email=email;
+        console.log("Ha entrat a register");
+        
+        connexio.iniciar();
 
-        adminUsers.newPlayerAsync(player);        
-        //console.log('usuari guardat');
-        //res.send({ success: true });
-        res.status(200).send({ success: true });
-
-    }
-});
-
-app.post('/register', async (req, res) => {
-
-    console.log("Ha entrat a register");
-    
-    connexio.iniciar();
-
-    let nom = req.body.name;
-    //let email=req.body.email;
-    let passwd = req.body.password;
-    const saltRounds = 10;
-    let salt;
+        let nom = req.body.name;
+        let email=req.body.email;
+        let passwd = req.body.password;
+        const saltRounds = 10;
+        let salt;
 
 
-    let player={
-        name: nom,
-        email:"",
-        pwd: "",
-        salt:"",
-        rol: "user",
-        /*Player Stats*/
-        investedMinutes: 0,
-        mSesions: 0,
-        zKilled: 0,
-        deads: 0
-    };
-
-
-    let existingUsername = await adminUsers.findPlayerAsync(nom);
-    
-
-    console.log("existingUsername: ",existingUsername);
-
-
-    if (existingUsername) {
- 
-        res.status(400).send({ success: false, message: 'Email already in use' });
-
-
-    }
-    else {
-
-        console.log("Ha entrat al else");
-
-        try {
-            salt = await getSalt(saltRounds);
-            encryptedPass = await hashPassword(passwd, salt);
-
-        }
-        catch (error) {
-            console.log(error);
-        }
-
-        player.salt=salt;
-        player.pwd=encryptedPass;
-        //player.email=email;
-
-        adminUsers.newPlayerAsync(player);        
-        //console.log('usuari guardat');
-        //res.send({ success: true });
-        res.status(200).send({ success: true });
-
-    }
-});
-
-
-//Ruta a /auth amb dos parametres que s'envien per "param"
-app.post("/authPost", async (req, res) => {
-
-
-    connexio.iniciar();
-
-    let name = req.body.name;
-    let passwd = req.body.password;
-
-    ret = await checkUserFromJson(name, passwd);
-
-    console.log("Ret dins authpost",ret.isAuth);
-
-    if (ret.isAuth) {
-        res.status(200).send(JSON.stringify(ret));
-        nomUsuari=ret.name;
-
-    }
-    else{
-        res.status(400).send(JSON.stringify(ret));
-
-    }
-
-    session.user = ret;
-
-
-
-});
-
-
-//Ruta a /logOutPost amb dos parametres que s'envien per "param"
-app.get("/getGameVariables", async (req, res) => {
-
- 
-    let playerSpeed = 1;
-
-
-
-});
-
-
-//comprimir assets
-app.get("/packAssets", async (req, res) => {
-
-    var archiver = require('archiver');
-    var archive = archiver.create('zip', {});
-    var output = fs.createWriteStream(__dirname + '/assets.zip');
-    archive.pipe(output);
-
-
-    archive
-        .directory(__dirname + '/assets')
-        .finalize();
-
-    archive.bulk([{
-        expand: true, cwd: './assets/',
-        src: ['**/*']
-    }]).finalize();
-
-});
-
-
-
-
-
-//Ruta a /logOutPost amb dos parametres que s'envien per "param"
-app.post("/logOutPost", async (req, res) => {
-
-    var ret = {
-        text: "No hi ha cap sessió que eliminar"
-    };
-    if (session.user && session.user.isAuth) {
-        session.user = { isAuth: false, roles: [] }
-        var ret = {
-            text: "sessió eliminada correctament"
+        let player={
+            name: nom,
+            email: email,
+            pwd: passwd,
+            salt:"",
+            rol: "user",
+            /*Player Stats*/
+            investedMinutes: 0,
+            mSesions: 0
         };
-    }
+        
+        //console.log("PARAMS "+nom+"/"+email+"/"+passwd)
 
-
-    console.log(ret)
-    res.send(JSON.stringify(ret));
-
-});
-
-app.listen(PORT, () => {
-    console.log("Server Running [" + PORT + "]");
-});
-
-
-async function checkUserFromJson(name, passwd) {
-    let query = "";
-    let nom = "";
-
-    let contrasenyaBase = "";
-    let contrasenyaAComprovar = "";
-    let ret = {
-        isAuth: false,
-        roles: [],
-        name: ""        
-    };
-
-    console.log("Nom passat: "+name);
-
-    var prom = await new Promise(async (resolve, reject) => {
-
-        try {
-            query = await adminUsers.findPlayerAsync(name);
-   
-            console.log("Query: ",query);
-
-        }
-        catch (err) {
-            console.log(err);
-
+        function isNotEmpty(nom) {
+            if (nom !== null && nom !== undefined && nom.trim !== "") {
+                return true;
+            } else {
+              return false;
+            }
         }
 
+        // Regular expression for validating email addresses and password
+        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
+        const pswdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,16}$/;
 
-        if(query!=null){
+        if (emailRegex.test(email) && pswdRegex.test(passwd) && nom!=="") {
+            console.log("Register Succesfull");
+            res.status(200).send({ success: true });
+        } else {
+            res.status(400);
+            if(!emailRegex.test(email)){
+                console.log("Email is not correct!");
+                res.send({ success: false, message: "Email is not correct!" });
+            }if(!pswdRegex.test(passwd)){
+                console.log("Password is not correct!");
+                res.send({ success: false, message: "Password is not correct!" });
+            }else{
+                console.log("User is not correct");
+                res.send({ success: false, message: "Username is not correct!" });
+            }
+        }
 
-            try{
-                
-                contrasenyaAComprovar = await hashPassword(passwd, query.salt);
-                
+        
+        
+
+        //console.log("existingUsername: ",existingUsername);
+        /*
+        let existingUsername = await adminUsers.findPlayerAsync(nom);
+        let existingMail = await adminUsers.findPlayerAsync(email);
+        let existingUsername2 = await adminUsers.findPlayerAsync(passwd);
+        */
+
+
+        /*if (nom !== null && nom !== undefined && nom !== "") {
+    
+            res.status(400).send({ success: false, message: 'Email already in use' });
+
+
+        }
+        else {
+
+            console.log("Ha entrat al else");
+    w
+            try {
+                salt = await getSalt(saltRounds);
+                encryptedPass = await hashPassword(passwd, salt);
 
             }
-            catch(err){
+            catch (error) {
+                console.log(error);
+            }
+
+            player.salt=salt;
+            player.pwd=encryptedPass;
+            //player.email=email;
+
+            adminUsers.newPlayerAsync(player);        
+            //console.log('usuari guardat');
+            //res.send({ success: true });
+            res.status(200).send({ success: true });
+
+        }*/
+    });
+
+    app.post('/register', async (req, res) => {
+
+        console.log("Ha entrat a register");
+        
+        connexio.iniciar();
+
+        let nom = req.body.name;
+        //let email=req.body.email;
+        let passwd = req.body.password;
+        const saltRounds = 10;
+        let salt;
+
+
+        let player={
+            name: nom,
+            email:"",
+            pwd: "",
+            salt:"",
+            rol: "user",
+            /*Player Stats*/
+            investedMinutes: 0,
+            mSesions: 0,
+            zKilled: 0,
+            deads: 0
+        };
+
+
+        let existingUsername = await adminUsers.findPlayerAsync(nom);
+        
+
+        console.log("existingUsername: ",existingUsername);
+
+
+        if (existingUsername) {
+    
+            res.status(400).send({ success: false, message: 'Email already in use' });
+
+
+        }
+        else {
+
+            console.log("Ha entrat al else");
+
+            try {
+                salt = await getSalt(saltRounds);
+                encryptedPass = await hashPassword(passwd, salt);
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+
+            player.salt=salt;
+            player.pwd=encryptedPass;
+            //player.email=email;
+
+            adminUsers.newPlayerAsync(player);        
+            //console.log('usuari guardat');
+            //res.send({ success: true });
+            res.status(200).send({ success: true });
+
+        }
+    });
+
+
+    //Ruta a /auth amb dos parametres que s'envien per "param"
+    app.post("/authPost", async (req, res) => {
+
+
+        connexio.iniciar();
+
+        let name = req.body.name;
+        let passwd = req.body.password;
+
+        ret = await checkUserFromJson(name, passwd);
+
+        console.log("Ret dins authpost",ret.isAuth);
+
+        if (ret.isAuth) {
+            res.status(200).send(JSON.stringify(ret));
+            nomUsuari=ret.name;
+
+        }
+        else{
+            res.status(400).send(JSON.stringify(ret));
+
+        }
+
+        session.user = ret;
+
+
+
+    });
+
+
+    //Ruta a /logOutPost amb dos parametres que s'envien per "param"
+    app.get("/getGameVariables", async (req, res) => {
+
+    
+        let playerSpeed = 1;
+
+
+
+    });
+
+
+    //comprimir assets
+    app.get("/packAssets", async (req, res) => {
+
+        var archiver = require('archiver');
+        var archive = archiver.create('zip', {});
+        var output = fs.createWriteStream(__dirname + '/assets.zip');
+        archive.pipe(output);
+
+
+        archive
+            .directory(__dirname + '/assets')
+            .finalize();
+
+        archive.bulk([{
+            expand: true, cwd: './assets/',
+            src: ['**/*']
+        }]).finalize();
+
+    });
+
+
+
+
+
+    //Ruta a /logOutPost amb dos parametres que s'envien per "param"
+    app.post("/logOutPost", async (req, res) => {
+
+        var ret = {
+            text: "No hi ha cap sessió que eliminar"
+        };
+        if (session.user && session.user.isAuth) {
+            session.user = { isAuth: false, roles: [] }
+            var ret = {
+                text: "sessió eliminada correctament"
+            };
+        }
+
+
+        console.log(ret)
+        res.send(JSON.stringify(ret));
+
+    });
+
+    app.listen(PORT, () => {
+        console.log("Server Running [" + PORT + "]");
+    });
+
+
+    async function checkUserFromJson(name, passwd) {
+        let query = "";
+        let nom = "";
+
+        let contrasenyaBase = "";
+        let contrasenyaAComprovar = "";
+        let ret = {
+            isAuth: false,
+            roles: [],
+            name: ""        
+        };
+
+        console.log("Nom passat: "+name);
+
+        var prom = await new Promise(async (resolve, reject) => {
+
+            try {
+                query = await adminUsers.findPlayerAsync(name);
+    
+                console.log("Query: ",query);
+
+            }
+            catch (err) {
                 console.log(err);
 
             }
 
-            ret.name=query.name;
-            contrasenyaBase = query.pwd;
-            ret.roles=['user'];
+
+            if(query!=null){
+
+                try{
+                    
+                    contrasenyaAComprovar = await hashPassword(passwd, query.salt);
+                    
+
+                }
+                catch(err){
+                    console.log(err);
+
+                }
+
+                ret.name=query.name;
+                contrasenyaBase = query.pwd;
+                ret.roles=['user'];
 
 
 
-            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
-         
-                ret.isAuth = true;
-                
-                
-    
-    
+                if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            
+                    ret.isAuth = true;
+                    
+                    
+        
+        
+                }
+
+
             }
+            
+            console.log("Ret: "+ret.isAuth);
 
+        
+            resolve(ret);
+
+        });
+
+
+
+        console.log("promesa: "+prom);
+
+        return prom;
+    }
+
+
+    async function retornaUsers() {
+        let usuaris = [];
+
+
+        try {
+            query = await adminUsers.getPlayersAsync();
+    
 
         }
-        
-        console.log("Ret: "+ret.isAuth);
+        catch (err) {
+            console.log(err);
+        }
 
-       
-        resolve(ret);
+
+        usuaris=query;
+
+
+
+        return usuaris;
+    }
+
+
+
+    app.post("/saveStats",(req,res)=>{
+
+
+        let playerNewStats={
+            investedSeconds:req.body.investedSeconds/1000,
+            rounds:req.body.rounds,
+            deads:req.body.deads
+        }
+
+        adminUsers.updatePlayerAsync(nomUsuari,playerNewStats);
+
+
+
+    })
+    
+
+    app.post("/usersPost", async (req, res) => {
+
+        let users = await adminUsers.getPlayersAsync();
+
+
+
+
+        session.users = users;
+
+
+        res.send(JSON.stringify(users));
+
+    });
+
+
+    app.post("/deletePost", async (req, res) => {
+
+        connexio.iniciar();
+
+        console.log("Ha entrat a delete post server");
+        let username = req.body.userid;
+
+
+        await adminUsers.deletePlayerAsync(username);
+
+
+        let users = await retornaUsers();
+
+        session.users = users;
+
+
+
+        res.send(JSON.stringify(users));
+
+
 
     });
 
 
 
-    console.log("promesa: "+prom);
 
-    return prom;
-}
+    function afegirSettings(){
 
+        console.log("Ha afegit settings");
 
-async function retornaUsers() {
-    let usuaris = [];
+        connexio.iniciar();
+        
+        newSettings={
+            identificacio:1,
+            playerSpeed:20,
+            playerMaxHealth:100,
+            playerFireRate:0.1
+        }
 
-
-    try {
-        query = await adminUsers.getPlayersAsync();
-   
-
-    }
-    catch (err) {
-        console.log(err);
-    }
+        console.log("Zombie health desdel server",newSettings.zombieMaxHealth);
 
 
-    usuaris=query;
-
-
-
-    return usuaris;
-}
-
-
-
-  app.post("/saveStats",(req,res)=>{
-
-
-    let playerNewStats={
-        investedSeconds:req.body.investedSeconds/1000,
-        rounds:req.body.rounds,
-        deads:req.body.deads
+        adminSettings.newSettingsAsync(newSettings);
     }
 
-    adminUsers.updatePlayerAsync(nomUsuari,playerNewStats);
+    app.post("/getSettingsPost",async(req,res)=>{
+        
+        connexio.iniciar();
 
 
+        let settings=await adminSettings.getSettingsAsync();
 
-  })
-  
+        let ret=JSON.stringify(settings)
 
-app.post("/usersPost", async (req, res) => {
-
-    let users = await adminUsers.getPlayersAsync();
-
-
-
-
-    session.users = users;
-
-
-    res.send(JSON.stringify(users));
-
-});
-
-
-app.post("/deletePost", async (req, res) => {
-
-    connexio.iniciar();
-
-    console.log("Ha entrat a delete post server");
-    let username = req.body.userid;
-
-
-    await adminUsers.deletePlayerAsync(username);
-
-
-    let users = await retornaUsers();
-
-    session.users = users;
-
-
-
-    res.send(JSON.stringify(users));
-
-
-
-});
+        res.send(ret);
 
 
 
 
-function afegirSettings(){
-
-    console.log("Ha afegit settings");
-
-    connexio.iniciar();
-    
-    newSettings={
-        identificacio:1,
-        playerSpeed:20,
-        playerMaxHealth:100,
-        playerFireRate:0.1
-    }
-
-    console.log("Zombie health desdel server",newSettings.zombieMaxHealth);
-
-
-    adminSettings.newSettingsAsync(newSettings);
-}
-
-app.post("/getSettingsPost",async(req,res)=>{
-    
-    connexio.iniciar();
-
-
-    let settings=await adminSettings.getSettingsAsync();
-
-    let ret=JSON.stringify(settings)
-
-    res.send(ret);
+    });
 
 
 
+    app.post("/updateSettingsPost",async (req,res)=>{
 
-});
+        console.log("Ha entrat a update post");
 
-
-
-app.post("/updateSettingsPost",async (req,res)=>{
-
-    console.log("Ha entrat a update post");
-
-    let newSettings = {
-        playerSpeed:req.body.playerSpeed,
-        playerMaxHealth:req.body.playerHealth,
-        playerFireRate:req.body.playerFireRate     
+        let newSettings = {
+            playerSpeed:req.body.playerSpeed,
+            playerMaxHealth:req.body.playerHealth,
+            playerFireRate:req.body.playerFireRate     
 
 
-    }
+        }
 
-    await adminSettings.updateSettingsAsync(1,newSettings);
+        await adminSettings.updateSettingsAsync(1,newSettings);
 
-})
+    })
 
-console.log("Nom usuari fora: ",nomUsuari);
+    console.log("Nom usuari fora: ",nomUsuari);

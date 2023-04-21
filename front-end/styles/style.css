@@ -513,3 +513,90 @@
         margin-bottom: 1rem;
 
     }
+
+.card{
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
+    height: 190px;
+    
+    background: var(--color-dark);
+    border-radius: 20px;
+    box-shadow: 0 35px 80px rgba(0,0,0,0.15);
+    transition: 0.5s;
+}
+
+.tabi{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(45deg, white, var(--color-danger));
+    border-radius: var(--border-radius-3);
+
+}
+
+.card:hover{
+    height: 450px;
+}
+
+.imgBx{
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    transform: translateX(-50%);
+    left: 50%;
+    top: -50px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 15px;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.imgBx img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width:100% ;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card:hover .imgBx{
+    width: 250px;
+    height: 250px;
+}
+
+.card .user-content{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.card .user-content.details{
+
+    padding: 40px;
+    text-align: center;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.card .user-content .details h2{
+    font-size: 1.25em;
+    font-weight: 600;
+    color: white;
+    line-height: 1.2em;
+}
+
+.card .user-content.details span{
+    font-size: 0.75em;
+    font-weight: 500;
+    opacity: 0.5;
+    
+
+}

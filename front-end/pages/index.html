@@ -16,7 +16,11 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
   <script src="https://unpkg.com/babel-polyfill/dist/polyfill.min.js"></script>
-  <script src="https://unpkg.com/vuetify@2.6.10/dist/vuetify.min.js"></script>
+  <script src="https://unpkg.com/babel-polyfill/dist/polyfill.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <link rel="stylesheet" href="/front-end/styles/style.css" />
 </head>
@@ -204,25 +208,36 @@
             <label for="hard">Difícil</label>
           </div>
 
-          </div>
-        
-        <div id="tab-5" class="tab-pane"> 
-          <div class="tabi">
-          <div class="card">
-            <div class="imgBx">
-              <img src="/assetts/fotito.JPG">
-            </div>
-            <div class="user-content">
-              <div class="details">
-                <h2>{name}<br><span>Admin</span></h2>
-              </div>
-              <div class="change">
-                <button>CHANGE</button>
-                <v-btn>DELETE</v-btn>
-              </div>
-            </div>
-          </div>
         </div>
+
+        <div id="tab-5" class="tab-pane">
+          <!--<div class="tabi">
+            <div class="card">
+              <div class="imgBx">
+                <img src="/assetts/fotito.JPG">
+              </div>
+              <div class="user-content">
+                <div class="details">
+                  <h2>{name}<br><span>Admin</span></h2>
+                </div>
+                <div class="change">
+                  <button>CHANGE</button>
+                  <v-btn>DELETE</v-btn>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-pic-div">
+            <img src="/assetts/image.JPG" id="photo">
+            <input type="file" id="file">
+            <label for="file" id="uploadBtn">Change Photo</label>
+            !-->
+            <form action="/upload" method="post" enctype="multipart/form-data">
+              <input type="file" name="profilePic" accept="image/*">
+              <input type="hidden" name="userId" value="<%= user._id %>">
+              <input type="submit" value="Upload">
+            </form>
+            
         </div>
 
 

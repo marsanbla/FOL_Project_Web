@@ -15,6 +15,13 @@ const adminUsers = require('../db/addu.js');
 const connexio = require('../db/poolmongo.js');
 const adminSettings = require('../db/usersettings.js');
 const { notEqual } = require('assert');
+const multer = require('multer');
+
+const upload = multer({ dest: 'uploads/' });
+
+const { MongoClient, Binary } = require('mongodb');
+const url = 'mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test';
+const dbName = 'users';
 
 // Serve static files from the public directory
 app.use(express.static('public'));
@@ -544,3 +551,25 @@ app.post("/updateSettingsPost", async (req, res) => {
 })
 
 console.log("Nom usuari fora: ", nomUsuari);
+
+app.post('/upload', upload.single('profilePic'), (req, res) => {
+    MongoClient.connect(url, (err, client) => {
+      if (err) throw err;
+  
+      const db = client.db(dbName);
+  
+      const collection = db.collection('users');
+  
+      const picture = req.file.buffer;
+  
+      collection.updateOne(
+        { _id: ObjectId(req.body.userId) },
+        { $set: { profilePic: Binary(picture) } },
+        (err, result) => {
+          if (err) throw err;
+  
+          res.send('Profile picture uploaded successfully');
+        }
+      );
+    });
+  });

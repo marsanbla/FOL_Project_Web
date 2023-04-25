@@ -26,23 +26,38 @@ const dbName = 'users';
 // Serve static files from the public directory
 app.use(express.static('public'));
 
-// Endpoint to retrieve data from MongoDB
-app.get('/data', (req, res) => {
-    MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', (err, db) => {
-        if (err) throw err;
-        db.collection('mycollection').find({}).toArray((err, result) => {
-            if (err) throw err;
-            res.send(result);
-            db.close();
-        });
+async function connectToDatabase() {
+    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-});
+  
+    return client.db('test');
+  }
+  
+  app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+  }));
+  
+  
+  app.post('/upload', async (req, res) => {
+    try {
+      const db = await connectToDatabase();
+  
+      const collection = db.collection('profile-pictures');
+      const result = await collection.insertOne({ image: req.body.image });
+  
+      res.send('Profile picture uploaded successfully');
+    } catch (e) {
+      console.error(e);
+      res.status(500).send('Error uploading profile picture');
+    }
+  });
 
 
 
 
-
-const PORT = 3012;
+const PORT = 3000;
 app.use(bodyParser.json());
 var users = [];
 
@@ -79,13 +94,13 @@ app.use(express.json());
 //Per cada petició es crida aquest middleware (app.use)
 //rep dos parametres el mòdul cors. El primer és l'origen, i el segon és una funció
 //de callback que ens permet controlar si acceptem la petició o no.
-app.use(cors({
+/*/app.use(cors({
     origin: function (origin, callback) {
         console.log(origin);
         return callback(null, true)
     }
 }));
-
+/*/
 
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async (req, res) => {

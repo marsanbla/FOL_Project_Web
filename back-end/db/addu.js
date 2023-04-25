@@ -4,8 +4,8 @@ const connexio = require('./poolmongo.js');
 async function newPlayerAsync(player) {
     let newPlayer = new playersCollection.playerModel();
 
-    newPlayer.name = player.name;
-    console.log("player nickname", player.nickname);
+    newPlayer.email = player.email;
+    console.log("player nickemail", player.nickemail);
     newPlayer.email = player.email;
     newPlayer.pwd = player.pwd;
     newPlayer.salt = player.salt;
@@ -34,28 +34,28 @@ async function getPlayersAsync() {
 
 async function updatePlayerAsync(idPlayer, playerNewStats) {
 
-    const filter = { name: idPlayer };
+    const filter = { email: idPlayer };
 
     const update = {
         investedSeconds: playerNewStats.investedSeconds,
-        rounds:playerNewStats.rounds,        
+        rounds: playerNewStats.rounds,
         deads: playerNewStats.deads
 
     }
 
 
-    let doc=await playersCollection.playerModel.findOneAndUpdate(filter,update);
+    let doc = await playersCollection.playerModel.findOneAndUpdate(filter, update);
 
 
 
 }
-async function deletePlayerAsync(nickname) {
+async function deletePlayerAsync(nickemail) {
 
     console.log("Ha entrat a delete player async");
 
 
 
-    let borrat = await playersCollection.playerModel.deleteOne({ name: nickname }, function (err) {
+    let borrat = await playersCollection.playerModel.deleteOne({ email: nickemail }, function (err) {
         if (err) {
             console.log(err);
         }
@@ -70,32 +70,31 @@ async function deletePlayerAsync(nickname) {
 
 async function findPlayerAsync(name) {
 
-    let res = null;
-
     console.log("Ha entrat a findPlayer");
 
-    let trobat = false;
+    let usernameTrobat = false;
+    let existingPlayerUserName = await playersCollection.playerModel.findOne({ name: name }).exec();
 
-
-    let existingPlayer = await playersCollection.playerModel.findOne({ name: name }).exec();
-
-
-    if (existingPlayer != null) {
-        trobat = true;
+    if (existingPlayerUserName != null) {
+        usernameTrobat = true
     }
+    return usernameTrobat
+    
 
-    if (trobat) {
-        res = existingPlayer;
+}
+async function findEmailAsync(email) {
+
+    console.log("Ha entrat a findEmail");
+
+    let emailTrobat = false;
+    let existingPlayerEmail = await playersCollection.playerModel.findOne({ email: email }).exec();
+
+
+    if (existingPlayerEmail != null) {
+        emailTrobat = true
     }
-
-
-  
-
-    console.log("resultat fp: ", res);
-
-    return res;
-
+    return emailTrobat
 }
 
 
-module.exports = { getPlayersAsync, newPlayerAsync, updatePlayerAsync, deletePlayerAsync, findPlayerAsync };
+module.exports = { getPlayersAsync, newPlayerAsync, updatePlayerAsync, deletePlayerAsync, findPlayerAsync, findEmailAsync };

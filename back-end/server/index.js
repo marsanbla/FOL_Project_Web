@@ -55,7 +55,7 @@ async function connectToDatabase() {
 
 
 
-const PORT = 3000;
+const PORT = 3012;
 app.use(bodyParser.json());
 var users = [];
 
@@ -103,7 +103,7 @@ app.use(express.json());
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async (req, res) => {
 
-    console.log("Ha entrat a register");
+    //console.log("Ha entrat a register");
 
     connexio.iniciar();
 
@@ -127,30 +127,30 @@ app.post('/registerUserAndroid', async (req, res) => {
 
     console.log("PARAMS " + nom + "/" + email + "/" + passwd)
 
-    function isNotEmpty(nom) {
-        if (nom !== null && nom !== undefined && nom.trim !== "") {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     // Regular expression for validating email addresses and password
+    const usernameRegex = /^[a-zA-Z0-9_-]{1,20}$/;
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
     const pswdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,16}$/;
 
     //AÑADIR metodo por si user no existe
-
-    if (emailRegex.test(email) && pswdRegex.test(passwd) && isNotEmpty(nom)) {
+    if (emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom)) {
         let existingPlayer = await adminUsers.findPlayerAsync(nom);
+        let existingEmail = await adminUsers.findEmailAsync(email);
+        console.log("existingPlayer: ", existingPlayer);
 
         if (existingPlayer) {
             //res.send({ success: false, message: 'Email already in use' });
-            res.status(455).send({ success: false, message: 'Email already in use' });
+            res.status(455).send({ success: false, message: 'UserName already in use' });
+            console.log("UserName already in use");    
+        }if (existingEmail) {
+            //res.send({ success: false, message: 'Email already in use' });
+            res.status(456).send({ success: false, message: 'Email already in use' });
+            console.log("Email already in use");    
         }
         else {
 
-            console.log("Ha entrat al else");
+            //console.log("Ha entrat al else");
 
             try {
                 salt = await getSalt(saltRounds);
@@ -168,18 +168,10 @@ app.post('/registerUserAndroid', async (req, res) => {
             adminUsers.newPlayerAsync(player);
             console.log('usuari guardat');
             //res.send({ success: true });
-            res.status(200).send({ success: true });
+            res.status(201).send({ success: true });
 
 
         }
-
-
-
-
-
-
-        res.status(201).send()
-        console.log("Register Succesfull");
     } else {
         if (!emailRegex.test(email)) {
             //res.send('1');
@@ -189,7 +181,7 @@ app.post('/registerUserAndroid', async (req, res) => {
             //res.send('2');
             res.status(453).send()//passwd not valid
             console.log("Password is not correct!");
-        } if (!isNotEmpty(nom)) {
+        } if (!usernameRegex.test(nom)) {
             //res.send('3');
             res.status(454).send()//user not valid
             console.log("User is not correct");
@@ -599,7 +591,7 @@ app.post("/updateSettingsPost", async (req, res) => {
 
 })
 
-console.log("Nom usuari fora: ", nomUsuari);
+//console.log("Nom usuari fora: ", nomUsuari);
 
 app.post('/upload', upload.single('profilePic'), (req, res) => {
     MongoClient.connect(url, (err, client) => {

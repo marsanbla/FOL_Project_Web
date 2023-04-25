@@ -19,9 +19,7 @@ const multer = require('multer');
 
 const upload = multer({ dest: 'uploads/' });
 
-const { MongoClient, Binary } = require('mongodb');
-const url = 'mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test';
-const dbName = 'users';
+
 
 // Serve static files from the public directory
 app.use(express.static('public'));
@@ -129,6 +127,42 @@ app.post('/registerUserAndroid', async (req, res) => {
     //AÑADIR metodo por si user no existe
 
     if (emailRegex.test(email) && pswdRegex.test(passwd) && isNotEmpty(nom)) {
+        let existingPlayer = await adminUsers.findPlayerAsync(nom);
+
+        if (existingPlayer) {
+            //res.send({ success: false, message: 'Email already in use' });
+            res.status(455).send({ success: false, message: 'Email already in use' });
+        }
+        else {
+
+            console.log("Ha entrat al else");
+
+            try {
+                salt = await getSalt(saltRounds);
+                encryptedPass = await hashPassword(passwd, salt);
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+
+            player.salt = salt;
+            player.pwd = encryptedPass;
+            //player.email=email;
+
+            adminUsers.newPlayerAsync(player);
+            console.log('usuari guardat');
+            //res.send({ success: true });
+            res.status(200).send({ success: true });
+
+
+        }
+
+
+
+
+
+
         res.status(201).send()
         console.log("Register Succesfull");
     } else {
@@ -554,22 +588,22 @@ console.log("Nom usuari fora: ", nomUsuari);
 
 app.post('/upload', upload.single('profilePic'), (req, res) => {
     MongoClient.connect(url, (err, client) => {
-      if (err) throw err;
-  
-      const db = client.db(dbName);
-  
-      const collection = db.collection('users');
-  
-      const picture = req.file.buffer;
-  
-      collection.updateOne(
-        { _id: ObjectId(req.body.userId) },
-        { $set: { profilePic: Binary(picture) } },
-        (err, result) => {
-          if (err) throw err;
-  
-          res.send('Profile picture uploaded successfully');
-        }
-      );
+        if (err) throw err;
+
+        const db = client.db(dbName);
+
+        const collection = db.collection('users');
+
+        const picture = req.file.buffer;
+
+        collection.updateOne(
+            { _id: ObjectId(req.body.userId) },
+            { $set: { profilePic: Binary(picture) } },
+            (err, result) => {
+                if (err) throw err;
+
+                res.send('Profile picture uploaded successfully');
+            }
+        );
     });
-  });
+});

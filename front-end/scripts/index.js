@@ -224,6 +224,20 @@ tema.addEventListener("click", () => {
 
 
 function changeTab(evt, tabName){
+
+  if (tabName=='tab-2'){
+    var callback = () => {
+      this.snackbar = true;
+      this.text = this.postData.text;
+      this.loading = false;
+      this.auth = false;
+      this.loginpage = true;
+    };
+    this.doFetchPost("http://localhost:3000/logOutPost", {}, callback);
+
+  }
+
+
   var i,tabPane,tabButton;
   tabPane= document.getElementsByClassName("tab-pane");
 

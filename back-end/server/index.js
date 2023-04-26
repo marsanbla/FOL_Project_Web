@@ -100,6 +100,7 @@ app.use(express.json());
 }));
 /*/
 
+
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async (req, res) => {
 
@@ -170,7 +171,6 @@ app.post('/registerUserAndroid', async (req, res) => {
             //res.send({ success: true });
             res.status(201).send({ success: true });
 
-
         }
     } else {
         if (!emailRegex.test(email)) {
@@ -187,47 +187,6 @@ app.post('/registerUserAndroid', async (req, res) => {
             console.log("User is not correct");
         }
     }
-
-
-
-
-    //console.log("existingUsername: ",existingUsername);
-    /*
-    let existingUsername = await adminUsers.findPlayerAsync(nom);
-    let existingMail = await adminUsers.findPlayerAsync(email);
-    let existingUsername2 = await adminUsers.findPlayerAsync(passwd);
-    */
-
-
-    /*if (nom !== null && nom !== undefined && nom !== "") {
- 
-        res.status(400).send({ success: false, message: 'Email already in use' });
-
-
-    }
-    else {
-
-        console.log("Ha entrat al else");
-w
-        try {
-            salt = await getSalt(saltRounds);
-            encryptedPass = await hashPassword(passwd, salt);
-
-        }
-        catch (error) {
-            console.log(error);
-        }
-
-        player.salt=salt;
-        player.pwd=encryptedPass;
-        //player.email=email;
-
-        adminUsers.newPlayerAsync(player);        
-        //console.log('usuari guardat');
-        //res.send({ success: true });
-        res.status(200).send({ success: true });
-
-    }*/
 });
 
 app.post('/register', async (req, res) => {
@@ -303,7 +262,7 @@ app.post("/authPost", async (req, res) => {
 
     let name = req.body.name;
     let passwd = req.body.password;
-
+    console.log("PARAMS "+name+passwd)
     ret = await checkUserFromJson(name, passwd);
 
     console.log("Ret dins authpost", ret.isAuth);
@@ -311,7 +270,6 @@ app.post("/authPost", async (req, res) => {
     if (ret.isAuth) {
         res.status(202).send();
         nomUsuari = ret.name;
-
     }
     else {
         res.status(401).send(JSON.stringify(ret));
@@ -401,13 +359,14 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async (resolve, reject) => {
 
         try {
-            query = await adminUsers.findPlayerAsync(name);
+            query = await adminUsers.findPlayerAsync1(name);
 
             console.log("Query: ", query);
 
         }
         catch (err) {
-            console.log(err);
+
+            console.log("ERROR"+err);
 
         }
 
@@ -415,7 +374,9 @@ async function checkUserFromJson(name, passwd) {
         if (query != null) {
 
             try {
-
+                //console.log("AAAAAAAAAAAA")
+                console.log("SALT "+query.salt)
+                //ESTA LINIA ES LA QUE PETA
                 contrasenyaAComprovar = await hashPassword(passwd, query.salt);
 
 

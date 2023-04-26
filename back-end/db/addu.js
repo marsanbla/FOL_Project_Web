@@ -3,7 +3,7 @@ const connexio = require('./poolmongo.js');
 
 async function newPlayerAsync(player) {
     let newPlayer = new playersCollection.playerModel();
-
+    newPlayer.name = player.name
     newPlayer.email = player.email;
     console.log("player nickemail", player.nickemail);
     newPlayer.email = player.email;
@@ -82,6 +82,19 @@ async function findPlayerAsync(name) {
     
 
 }
+async function findPlayerAsync1(name){
+    console.log("Ha entrat a findPlayer");
+    let res = null;
+    let usernameTrobat = false;
+    let existingPlayer = await playersCollection.playerModel.findOne({ name: name }).exec();
+
+    if (existingPlayer != null) {
+        usernameTrobat = true
+    } if (usernameTrobat) {
+        res = existingPlayer;
+    }
+    return res
+}
 async function findEmailAsync(email) {
 
     console.log("Ha entrat a findEmail");
@@ -97,4 +110,4 @@ async function findEmailAsync(email) {
 }
 
 
-module.exports = { getPlayersAsync, newPlayerAsync, updatePlayerAsync, deletePlayerAsync, findPlayerAsync, findEmailAsync };
+module.exports = { getPlayersAsync, newPlayerAsync, updatePlayerAsync, deletePlayerAsync, findPlayerAsync, findEmailAsync,findPlayerAsync1 };

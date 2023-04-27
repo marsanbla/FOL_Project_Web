@@ -8,7 +8,7 @@ import Users from './views/Users.vue'
 import Hawaii from './views/Hawaii.vue'
 import Jamaica from './views/Jamaica.vue'
 import Panama from './views/Panama.vue'
-import Dashboard from './views/Panama.vue'
+import Dashboard from './views/Dashboard.vue'
 import '/main.css'
 
 

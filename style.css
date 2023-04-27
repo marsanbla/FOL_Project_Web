@@ -62,7 +62,9 @@ body {
     color: var(--color-dark)
 }
 
-.col-lg-2 {}
+.col-lg-2 {
+    padding-right: 50px;
+}
 
 .col-md-auto {
     padding-left: 200px;

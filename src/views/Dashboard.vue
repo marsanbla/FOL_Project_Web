@@ -86,7 +86,9 @@
           </tr>
         </tbody>
       </table>
-      <a href="#">Show All</a>
+      <router-link to="/users"
+        ><button style="color: blue">Show all</button></router-link
+      >
     </div>
   </div>
 </template>

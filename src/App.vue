@@ -1,143 +1,95 @@
-<script></script>
-
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link>
-    <router-link to="/brazil">Brazil</router-link>
-    <router-link to="/hawaii">Hawaii</router-link>
-    <router-link to="/jamaica">Jamaica</router-link>
-    <router-link to="/panama">Panama</router-link>
-    <!--img src="public\images\logo.png"/-->
-  </div>
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-1">
-        <aside>
-          <!--Izquierda-->
-          <div class="top">
-            <div class="logo">
-              <img src="/assetts/logo.png" />
-              <h2>FOL <span class="danger">ING </span></h2>
-            </div>
-            <div class="close" id="close-btn">
-              <span class="material-icons-sharp"> close </span>
-            </div>
-          </div>
-
-          <div class="tab-buttons">
-            <router-link to="/dashboard">
-              <button class="material-icons-sharp">grid_view</button>
-              <button class="tab-button" onclick="changeTab(event, 'tab-1')">
-                Dashboard
-              </button>
-            </router-link>
-
-            <router-link to="/users">
-              <button class="material-icons-sharp">group</button>
-              <button class="tab-button" onclick="changeTab(event, 'tab-1')">
-                Users Admin
-              </button>
-            </router-link>
-
-            <a href="#">
-              <span class="material-icons-sharp">query_stats</span>
-              <button class="tab-button" onclick="changeTab(event, 'tab-3')">
-                Stats
-              </button>
-            </a>
-            <a href="#">
-              <span class="material-icons-sharp"> sports_esports </span>
-
-              <button
-                class="tab-button active"
-                onclick="changeTab(event, 'tab-4')"
+  <div id="app">
+    <v-app id="inspire">
+      <v-card class="pb-4 ma-60" elevation="8">
+        <v-row justify="center">
+          <v-col cols="4" class="pt-16 pl-6 pr-6 teal lighten-2">
+            <div class="d-flex flex-column justify-center align-center">
+              <h1>Welcome Admin</h1>
+              <p class="text-center text-justify">
+                This is the admin page to control your game
+              </p>
+              <v-btn outlined rounded color="white" @click="getAuthPost"
+                >SIGN IN</v-btn
               >
-                Gameplay
-              </button>
-            </a>
-            <a href="#">
-              <span class="material-icons-sharp"> settings </span>
-
-              <button class="tab-button" onclick="changeTab(event, 'tab-5')">
-                User Panel
-              </button>
-            </a>
-            <a href="#">
-              <span class="material-icons-sharp"> logout </span>
-
-              <h3>LogOut</h3>
-            </a>
-          </div>
-        </aside>
-      </div>
-      <div class="col-md-auto flex-grow-1">
-        <main>
-          <router-view></router-view>
-        </main>
-      </div>
-      <div class="col col-lg-2">
-        <!--Derecha-->
-        <div class="right">
-          <div class="top">
-            <button id="menu-btn">
-              <span class="material-icons-sharp"> menu </span>
-            </button>
-            <div class="tema">
-              <span class="material-icons-sharp active"> light_mode </span>
-              <span class="material-icons-sharp"> dark_mode </span>
             </div>
-            <div class="profile">
-              <div class="info">
-                <p>Hello, {{ user }}</p>
-                <small class="text-muted">{{ rol }}</small>
+          </v-col>
+          <v-col
+            cols="8"
+            class="d-flex flex-column pt-16 pl-6 pr-6 align-center justify-center"
+          >
+            <div class="d-flex flex-column justify-center align-center">
+              <h1 class="teal--text">Create Account</h1>
+              <div>
+                <v-btn outlined icon>
+                  <v-icon icon--outlined> mdi-facebook </v-icon>
+                </v-btn>
+                <v-btn outlined icon>
+                  <v-icon icon--outlined> mdi-google-plus </v-icon>
+                </v-btn>
+                <v-btn outlined icon>
+                  <v-icon icon--outlined> fab fa-linkedin-in </v-icon>
+                </v-btn>
               </div>
-              <div class="profile-photo">
-                <img src="/assetts/fotito.JPG" />
-              </div>
+              <p>Ensure your email for registration</p>
             </div>
-          </div>
-
-          <div class="recent-played">
-            <h2>People That Played Recently to Foling</h2>
-            <div class="updates">
-              <div class="update">
-                <div class="profile-photo">
-                  <img src="/assetts/fotito.JPG" />
-                </div>
-                <div class="message">
-                  <p>
-                    <b>{{ user }} </b> Played during {{ gametime }}
-                  </p>
-                  <small class="text-muted">{{ time }} ago</small>
-                </div>
-                <div class="update">
-                  <div class="profile-photo">
-                    <img src="/assetts/fotito2.JPG" />
-                  </div>
-                  <div class="message">
-                    <p>
-                      <b>{{ user }} </b> Played during {{ gametime }}
-                    </p>
-                    <small class="text-muted">{{ time }} ago</small>
-                  </div>
-                  <div class="update">
-                    <div class="profile-photo">
-                      <img src="/assetts/fotito3.JPG" />
-                    </div>
-                    <div class="message">
-                      <p>
-                        <b>{{ user }} </b> Played during {{ gametime }}
-                      </p>
-                      <small class="text-muted">{{ time }} ago</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="fields">
+              <v-list-item>
+                <v-text-field
+                  color="teal"
+                  label="Name"
+                  v-model="username"
+                  prepend-icon="mdi-account"
+                >
+                </v-text-field>
+              </v-list-item>
+              <v-list-item>
+                <v-text-field
+                  color="teal"
+                  type="email"
+                  v-model="email"
+                  label="Email"
+                  prepend-icon="email"
+                ></v-text-field>
+              </v-list-item>
+              <v-list-item>
+                <v-text-field
+                  color="teal"
+                  type="password"
+                  v-model="passwd"
+                  label="Password"
+                  prepend-icon="mdi-lock"
+                ></v-text-field>
+              </v-list-item>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div>
+              <v-btn
+                color="teal lighten-2"
+                rounded
+                class="white--text"
+                @click="getAuthPost"
+                href="./index.html"
+                >SIGN UP</v-btn
+              >
+            </div>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-app>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: "Hello, World!",
+    };
+  },
+  methods: {
+    changeMessage() {
+      this.message = "Hello, Vue!";
+    },
+  },
+};
+</script>

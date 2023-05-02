@@ -26,36 +26,41 @@ app.use(express.static('public'));
 
 async function connectToDatabase() {
     const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
     });
-  
+
     return client.db('test');
-  }
-  
-  app.use(cors({
-    origin: 'http://127.0.0.1:5500',
-  }));
-  
-  
-  app.post('/upload', async (req, res) => {
+}
+
+app.use(cors());
+/*app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});*/
+
+
+
+app.post('/upload', async(req, res) => {
     try {
-      const db = await connectToDatabase();
-  
-      const collection = db.collection('profile-pictures');
-      const result = await collection.insertOne({ image: req.body.image });
-  
-      res.send('Profile picture uploaded successfully');
+        const db = await connectToDatabase();
+
+        const collection = db.collection('profile-pictures');
+        const result = await collection.insertOne({ image: req.body.image });
+
+        res.send('Profile picture uploaded successfully');
     } catch (e) {
-      console.error(e);
-      res.status(500).send('Error uploading profile picture');
+        console.error(e);
+        res.status(500).send('Error uploading profile picture');
     }
-  });
+});
 
 
 
 
-const PORT = 3012;
+const PORT = 3000;
 app.use(bodyParser.json());
 var users = [];
 
@@ -102,7 +107,7 @@ app.use(express.json());
 
 
 //FUNCIO REGISTRO ANDROID
-app.post('/registerUserAndroid', async (req, res) => {
+app.post('/registerUserAndroid', async(req, res) => {
 
     //console.log("Ha entrat a register");
 
@@ -143,13 +148,13 @@ app.post('/registerUserAndroid', async (req, res) => {
         if (existingPlayer) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(455).send({ success: false, message: 'UserName already in use' });
-            console.log("UserName already in use");    
-        }if (existingEmail) {
+            console.log("UserName already in use");
+        }
+        if (existingEmail) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(456).send({ success: false, message: 'Email already in use' });
-            console.log("Email already in use");    
-        }
-        else {
+            console.log("Email already in use");
+        } else {
 
             //console.log("Ha entrat al else");
 
@@ -157,8 +162,7 @@ app.post('/registerUserAndroid', async (req, res) => {
                 salt = await getSalt(saltRounds);
                 encryptedPass = await hashPassword(passwd, salt);
 
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
             }
 
@@ -175,21 +179,23 @@ app.post('/registerUserAndroid', async (req, res) => {
     } else {
         if (!emailRegex.test(email)) {
             //res.send('1');
-            res.status(452).send()//email not valid
+            res.status(452).send() //email not valid
             console.log("Email is not correct!");
-        } if (!pswdRegex.test(passwd)) {
+        }
+        if (!pswdRegex.test(passwd)) {
             //res.send('2');
-            res.status(453).send()//passwd not valid
+            res.status(453).send() //passwd not valid
             console.log("Password is not correct!");
-        } if (!usernameRegex.test(nom)) {
+        }
+        if (!usernameRegex.test(nom)) {
             //res.send('3');
-            res.status(454).send()//user not valid
+            res.status(454).send() //user not valid
             console.log("User is not correct");
         }
     }
 });
 
-app.post('/register', async (req, res) => {
+app.post('/register', async(req, res) => {
 
     console.log("Ha entrat a register");
 
@@ -227,8 +233,7 @@ app.post('/register', async (req, res) => {
         res.status(400).send({ success: false, message: 'Email already in use' });
 
 
-    }
-    else {
+    } else {
 
         console.log("Ha entrat al else");
 
@@ -236,8 +241,7 @@ app.post('/register', async (req, res) => {
             salt = await getSalt(saltRounds);
             encryptedPass = await hashPassword(passwd, salt);
 
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
         }
 
@@ -255,14 +259,19 @@ app.post('/register', async (req, res) => {
 
 
 //Ruta a /auth amb dos parametres que s'envien per "param"
-app.post("/authPost", async (req, res) => {
+app.post("/authPost", async(req, res) => {
+    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
+
+
+    console.log("Ha entrat a auth");
+
 
 
     connexio.iniciar();
 
     let name = req.body.name;
     let passwd = req.body.password;
-    console.log("PARAMS "+name+passwd)
+    console.log("PARAMS " + name + passwd)
     ret = await checkUserFromJson(name, passwd);
 
     console.log("Ret dins authpost", ret.isAuth);
@@ -270,8 +279,7 @@ app.post("/authPost", async (req, res) => {
     if (ret.isAuth) {
         res.status(202).send();
         nomUsuari = ret.name;
-    }
-    else {
+    } else {
         res.status(401).send(JSON.stringify(ret));
 
     }
@@ -284,7 +292,7 @@ app.post("/authPost", async (req, res) => {
 
 
 //Ruta a /logOutPost amb dos parametres que s'envien per "param"
-app.get("/getGameVariables", async (req, res) => {
+app.get("/getGameVariables", async(req, res) => {
 
 
     let playerSpeed = 1;
@@ -295,7 +303,7 @@ app.get("/getGameVariables", async (req, res) => {
 
 
 //comprimir assets
-app.get("/packAssets", async (req, res) => {
+app.get("/packAssets", async(req, res) => {
 
     var archiver = require('archiver');
     var archive = archiver.create('zip', {});
@@ -308,7 +316,8 @@ app.get("/packAssets", async (req, res) => {
         .finalize();
 
     archive.bulk([{
-        expand: true, cwd: './assets/',
+        expand: true,
+        cwd: './assets/',
         src: ['**/*']
     }]).finalize();
 
@@ -319,7 +328,7 @@ app.get("/packAssets", async (req, res) => {
 
 
 //Ruta a /logOutPost amb dos parametres que s'envien per "param"
-app.post("/logOutPost", async (req, res) => {
+app.post("/logOutPost", async(req, res) => {
 
     var ret = {
         text: "No hi ha cap sessió que eliminar"
@@ -356,17 +365,16 @@ async function checkUserFromJson(name, passwd) {
 
     console.log("Nom passat: " + name);
 
-    var prom = await new Promise(async (resolve, reject) => {
+    var prom = await new Promise(async(resolve, reject) => {
 
         try {
             query = await adminUsers.findPlayerAsync1(name);
 
             console.log("Query: ", query);
 
-        }
-        catch (err) {
+        } catch (err) {
 
-            console.log("ERROR"+err);
+            console.log("ERROR" + err);
 
         }
 
@@ -375,13 +383,12 @@ async function checkUserFromJson(name, passwd) {
 
             try {
                 //console.log("AAAAAAAAAAAA")
-                console.log("SALT "+query.salt)
-                //ESTA LINIA ES LA QUE PETA
+                console.log("SALT " + query.salt)
+                    //ESTA LINIA ES LA QUE PETA
                 contrasenyaAComprovar = await hashPassword(passwd, query.salt);
 
 
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(err);
 
             }
@@ -427,8 +434,7 @@ async function retornaUsers() {
         query = await adminUsers.getPlayersAsync();
 
 
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
     }
 
@@ -458,7 +464,7 @@ app.post("/saveStats", (req, res) => {
 })
 
 
-app.post("/usersPost", async (req, res) => {
+app.post("/usersPost", async(req, res) => {
 
     let users = await adminUsers.getPlayersAsync();
 
@@ -473,7 +479,7 @@ app.post("/usersPost", async (req, res) => {
 });
 
 
-app.post("/deletePost", async (req, res) => {
+app.post("/deletePost", async(req, res) => {
 
     connexio.iniciar();
 
@@ -518,7 +524,7 @@ function afegirSettings() {
     adminSettings.newSettingsAsync(newSettings);
 }
 
-app.post("/getSettingsPost", async (req, res) => {
+app.post("/getSettingsPost", async(req, res) => {
 
     connexio.iniciar();
 
@@ -536,7 +542,7 @@ app.post("/getSettingsPost", async (req, res) => {
 
 
 
-app.post("/updateSettingsPost", async (req, res) => {
+app.post("/updateSettingsPost", async(req, res) => {
 
     console.log("Ha entrat a update post");
 
@@ -564,9 +570,7 @@ app.post('/upload', upload.single('profilePic'), (req, res) => {
 
         const picture = req.file.buffer;
 
-        collection.updateOne(
-            { _id: ObjectId(req.body.userId) },
-            { $set: { profilePic: Binary(picture) } },
+        collection.updateOne({ _id: ObjectId(req.body.userId) }, { $set: { profilePic: Binary(picture) } },
             (err, result) => {
                 if (err) throw err;
 

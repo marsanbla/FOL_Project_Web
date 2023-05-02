@@ -9,12 +9,6 @@ async function newSettingsAsync(settings) {
     console.log("new settings zombie damage", settings.zombieDamage);
 
     newSettings.identificacio = settings.identificacio;
-
-
-    newSettings.zombieMaxHealth = settings.zombieMaxHealth;
-    console.log("Zombie health dsdel ad mongo: ", newSettings.zombieMaxHealth);
-    newSettings.zombieDamage = settings.zombieDamage;
-    newSettings.zombieSpeed = settings.zombieSpeed;
     newSettings.playerSpeed = settings.playerSpeed;
     newSettings.playerMaxHealth = settings.playerMaxHealth;
     newSettings.playerFireRate = settings.playerFireRate;

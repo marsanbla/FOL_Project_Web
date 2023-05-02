@@ -128,6 +128,7 @@ export default {
       ) {
         this.emptyFields = true;
       } else {
+        this.register();
         alert("You are now registered");
       }
     },
@@ -180,6 +181,17 @@ export default {
         callback
       );
     },
+    register() {
+      var callback = () => {
+        this.snackbar = true;
+        this.text = this.postData.text;
+        this.loading = false;
+        this.auth = false;
+        this.loginpage = true;
+      };
+      this.doFetchPost("http://localhost:3000/register", { userid: this.username, passwdid: this.passwd }, callback);
+    },
+
   },
 };
 </script>

@@ -24,21 +24,21 @@
           </div>
 
           <div class="tab-buttons">
-            <router-link to="/dashboard">
+            <router-link to="/home/dashboard">
               <button class="material-icons-sharp">grid_view</button>
               <button class="tab-button" onclick="changeTab(event, 'tab-1')">
                 Dashboard
               </button>
             </router-link>
 
-            <router-link to="/users">
+            <router-link to="/home/users">
               <button class="material-icons-sharp">group</button>
               <button class="tab-button" onclick="changeTab(event, 'tab-1')">
                 Users Admin
               </button>
             </router-link>
 
-            <router-link to="/stats">
+            <router-link to="/home/stats">
               <button class="material-icons-sharp">query_stats</button>
               <button class="tab-button" onclick="changeTab(event, 'tab-3')">
                 Stats
@@ -609,5 +609,34 @@ b {
 
 .warning {
   color: var(--color-warning);
+}
+/* Navigation */
+
+#nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 0;
+  padding: 30px;
+  background: #2c3e50;
+  color: white;
+  display: flex;
+  align-items: center;
+  border-bottom: 5px solid #4e6c71;
+  z-index: 2;
+}
+
+#nav a {
+  display: inline-block;
+  margin-right: 20px;
+  color: white;
+  opacity: 0.7;
+  transition: 0.2 ease color;
+}
+
+#nav a.router-link-active,
+#nav a:hover {
+  opacity: 1;
 }
 </style>

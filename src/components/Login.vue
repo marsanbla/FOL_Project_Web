@@ -31,7 +31,7 @@
                 required
               />
               <!--router-link to="/home">Ves a home</router-link-->
-              <input type="submit" class="btn btn-primary" />
+              <input type="submit" class="btn btn-primary" @click="doLogin" />
 
               <p>
                 Don't have an account?
@@ -115,6 +115,8 @@ export default {
       if (this.emailLogin === "" || this.passwordLogin === "") {
         this.emptyFields = true;
       } else {
+        console.log("Ha entrat al else del do login");
+        this.getAuthPost();
         alert("You are now logged in");
       }
     },
@@ -128,6 +130,55 @@ export default {
       } else {
         alert("You are now registered");
       }
+    },
+    doFetchPost(url, data, callback) {
+      this.loading = true;
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+        mode: "cors",
+        cache: "default",
+      })
+        .then((response) => {
+          console.log(response);
+          return response.json();
+        })
+        .then((data) => {
+          this.postData = data;
+          setTimeout(callback, this.timeout);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getAuthPost() {
+      console.log("Ha entrat a get auth");
+      let callback = () => {
+        this.snackbar = true;
+
+        console.log("Is auth dins client" + this.postData.isAuth);
+
+        if (this.postData.isAuth) {
+          this.text = "Autoritzat. Roles => " + this.postData.roles;
+          this.auth = true;
+          this.verpagina = true;
+          console.log("dins get auth post auth this.aut= ", this.auth);
+        } else {
+          this.text = "No autoritzat";
+        }
+        this.loading = false;
+      };
+
+      this.doFetchPost(
+        "http://localhost:3000/authPost",
+        { name: this.emailLogin, password: this.passwordLogin },
+        callback
+      );
     },
   },
 };

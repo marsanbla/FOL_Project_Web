@@ -23,8 +23,35 @@ const router = createRouter({
 
     history: createWebHashHistory(),
 
-    routes: [
-        { path: '/home', name: 'Home', component: Home },
+    routes: [{
+            path: '/home',
+            name: 'Home',
+            component: Home,
+            meta: {
+                requiresAuth: true,
+            },
+            children: [{
+                    path: 'dashboard',
+                    name: 'Dashboard',
+                    component: Dashboard,
+                },
+                {
+                    path: 'users',
+                    name: 'Users',
+                    component: Users,
+                },
+                {
+                    path: 'stats',
+                    name: 'Stats',
+                    component: Stats,
+                },
+
+
+            ]
+
+
+
+        },
         { path: '/about', name: 'About', component: About },
         { path: '/users', name: 'users', component: Users },
         { path: '/stats', name: 'stats', component: Stats },

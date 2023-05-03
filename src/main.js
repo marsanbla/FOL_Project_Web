@@ -7,7 +7,7 @@ import About from './views/About.vue'
 import Users from './views/Users.vue'
 import Stats from './views/Stats.vue'
 import LoginView from './views/LoginView.vue'
-import Panama from './views/Panama.vue'
+import UserP from './views/UserP.vue'
 import Dashboard from './views/Dashboard.vue'
 //import '/main.css'
 import Chart from 'chart.js/auto';
@@ -45,6 +45,13 @@ const router = createRouter({
                     name: 'Stats',
                     component: Stats,
                 },
+                {
+                    path: 'userp',
+                    name: 'User Panel',
+                    component: UserP,
+                }
+
+                    
 
 
             ]
@@ -56,7 +63,7 @@ const router = createRouter({
         { path: '/users', name: 'users', component: Users },
         { path: '/stats', name: 'stats', component: Stats },
         { path: '/', name: 'login', component: LoginView },
-        { path: '/panama', name: 'panama', component: Panama },
+        { path: '/userp', name: 'user', component: UserP },
         { path: '/dashboard', name: 'dashboard', component: Dashboard },
 
 

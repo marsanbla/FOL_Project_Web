@@ -3,8 +3,8 @@
     <router-link to="/">Home</router-link>
     <router-link to="/brazil">Brazil</router-link>
     <router-link to="/hawaii">Hawaii</router-link>
-    <router-link to="/jamaica">Jamaica</router-link>
-    <router-link to="/panama">Panama</router-link>
+    <router-link to="/users">Users</router-link>
+    <router-link to="/userp">User Panel</router-link>
     <!--img src="public\images\logo.png"/-->
   </div>
 

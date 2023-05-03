@@ -60,7 +60,7 @@ app.post('/upload', async(req, res) => {
 
 
 
-const PORT = 3000;
+const PORT = 3012;
 app.use(bodyParser.json());
 var users = [];
 
@@ -498,6 +498,17 @@ app.post("/deletePost", async(req, res) => {
 
     res.send(JSON.stringify(users));
 
+
+
+});
+
+app.post("/usersPost", async(req, res) => {
+
+    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
+
+    let users = await adminUsers.getPlayersAsync();
+    session.users = users;
+    res.send(JSON.stringify(users))
 
 
 });

@@ -105,22 +105,28 @@ export default {
       passwordReg: "",
       confirmReg: "",
       emptyFields: false,
+      postData: null,
+      response: null,
     };
   },
   methods: {
     changeMessage() {
       this.message = "Hello, Vue!";
     },
-    doLogin() {
+    async doLogin() {
       if (this.emailLogin === "" || this.passwordLogin === "") {
         this.emptyFields = true;
       } else {
         console.log("Ha entrat al else del do login");
-        this.getAuthPost();
-        alert("You are now logged in");
+        var response= await this.getAuthPost();
+        if (response.status==202) {
+          this.$router.push({ name: "Home" });
+          alert("You are now logged in");
+
+        }
       }
     },
-    doRegister() {
+    async doRegister() {
       if (
         this.emailReg === "" ||
         this.passwordReg === "" ||
@@ -128,9 +134,33 @@ export default {
       ) {
         this.emptyFields = true;
       } else {
-        this.register();
-        alert("You are now registered");
+        var response = await this.register();
+        //console.log("Post data: ", this.postData);
+        console.log("Response dins do register: ", response);
+        if (response.status == 201) {
+          alert("You are now registered");
+        }
       }
+    },
+    async doDataFromResponse(response) {
+      var data = await response.json();
+
+      return data;
+    },
+    doPromiseFetchPost(url, data, callback) {
+      this.loading = true;
+
+      var promResponse = fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+        mode: "cors",
+        cache: "default",
+      });
+      return promResponse;
     },
     doFetchPost(url, data, callback) {
       this.loading = true;
@@ -146,7 +176,9 @@ export default {
         cache: "default",
       })
         .then((response) => {
-          console.log(response);
+          console.log("Resposta del doFetch: ", response);
+          this.response = response;
+          console.log("Resposta de dins del vue: ", this.response);
           return response.json();
         })
         .then((data) => {
@@ -157,7 +189,7 @@ export default {
           console.log(error);
         });
     },
-    getAuthPost() {
+    async getAuthPost() {
       console.log("Ha entrat a get auth");
       let callback = () => {
         this.snackbar = true;
@@ -175,23 +207,28 @@ export default {
         this.loading = false;
       };
 
-      this.doFetchPost(
+      return this.doPromiseFetchPost(
         "http://localhost:3000/authPost",
         { name: this.emailLogin, password: this.passwordLogin },
         callback
       );
     },
-    register() {
+    async register() {
       var callback = () => {
+        console.log("Resposta dins del register: ", this.response);
         this.snackbar = true;
         this.text = this.postData.text;
         this.loading = false;
         this.auth = false;
         this.loginpage = true;
       };
-      this.doFetchPost("http://localhost:3000/register", { userid: this.username, passwdid: this.passwd }, callback);
+      console.log("Email: ", this.emailReg, " Password: ", this.passwordReg);
+      return this.doPromiseFetchPost(
+        "http://localhost:3000/registerUserAndroid",
+        { email: this.emailReg, password: this.passwordReg },
+        callback
+      );
     },
-
   },
 };
 </script>

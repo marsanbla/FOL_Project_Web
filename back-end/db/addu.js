@@ -55,7 +55,7 @@ async function deletePlayerAsync(nickemail) {
 
 
 
-    let borrat = await playersCollection.playerModel.deleteOne({ email: nickemail }, function (err) {
+    let borrat = await playersCollection.playerModel.deleteOne({ email: nickemail }, function(err) {
         if (err) {
             console.log(err);
         }
@@ -79,10 +79,10 @@ async function findPlayerAsync(name) {
         usernameTrobat = true
     }
     return usernameTrobat
-    
+
 
 }
-async function findPlayerAsync1(name){
+async function findPlayerAsync1(name) {
     console.log("Ha entrat a findPlayer");
     let res = null;
     let usernameTrobat = false;
@@ -90,7 +90,8 @@ async function findPlayerAsync1(name){
 
     if (existingPlayer != null) {
         usernameTrobat = true
-    } if (usernameTrobat) {
+    }
+    if (usernameTrobat) {
         res = existingPlayer;
     }
     return res
@@ -102,12 +103,14 @@ async function findEmailAsync(email) {
     let emailTrobat = false;
     let existingPlayerEmail = await playersCollection.playerModel.findOne({ email: email }).exec();
 
+    console.log("Existing player EXamil: ", existingPlayerEmail);
+
 
     if (existingPlayerEmail != null) {
         emailTrobat = true
     }
-    return emailTrobat
+    return existingPlayerEmail;
 }
 
 
-module.exports = { getPlayersAsync, newPlayerAsync, updatePlayerAsync, deletePlayerAsync, findPlayerAsync, findEmailAsync,findPlayerAsync1 };
+module.exports = { getPlayersAsync, newPlayerAsync, updatePlayerAsync, deletePlayerAsync, findPlayerAsync, findEmailAsync, findPlayerAsync1 };

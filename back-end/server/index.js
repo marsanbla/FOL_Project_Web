@@ -108,12 +108,14 @@ app.use(express.json());
 
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async(req, res) => {
+    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
+
 
     //console.log("Ha entrat a register");
 
     connexio.iniciar();
 
-    let nom = req.body.name;
+    //let nom = req.body.name;
     let email = req.body.email;
     let passwd = req.body.password;
     const saltRounds = 10;
@@ -121,7 +123,7 @@ app.post('/registerUserAndroid', async(req, res) => {
 
 
     let player = {
-        name: nom,
+        //name: nom,
         email: email,
         pwd: passwd,
         salt: "",
@@ -130,8 +132,8 @@ app.post('/registerUserAndroid', async(req, res) => {
         investedMinutes: 0,
         mSesions: 0
     };
-
-    console.log("PARAMS " + nom + "/" + email + "/" + passwd)
+    console.log("PARAMS " + email + "/" + passwd)
+        //console.log("PARAMS " + nom + "/" + email + "/" + passwd)
 
 
     // Regular expression for validating email addresses and password
@@ -139,17 +141,17 @@ app.post('/registerUserAndroid', async(req, res) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
     const pswdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,16}$/;
 
-    //AÑADIR metodo por si user no existe
-    if (emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom)) {
-        let existingPlayer = await adminUsers.findPlayerAsync(nom);
+    //AÑADIR metodo por si user no existe 
+    if (true /*emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom) */ ) {
+        //let existingPlayer = await adminUsers.findPlayerAsync(nom);
         let existingEmail = await adminUsers.findEmailAsync(email);
-        console.log("existingPlayer: ", existingPlayer);
+        //console.log("existingPlayer: ", existingPlayer);
 
-        if (existingPlayer) {
+        /*if (existingPlayer) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(455).send({ success: false, message: 'UserName already in use' });
             console.log("UserName already in use");
-        }
+        }*/
         if (existingEmail) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(456).send({ success: false, message: 'Email already in use' });
@@ -368,7 +370,7 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findPlayerAsync1(name);
+            query = await adminUsers.findEmailAsync(name);
 
             console.log("Query: ", query);
 
@@ -393,13 +395,13 @@ async function checkUserFromJson(name, passwd) {
 
             }
 
-            ret.name = query.name;
+            ret.name = query.email;
             contrasenyaBase = query.pwd;
             ret.roles = ['user'];
 
 
 
-            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
 
                 ret.isAuth = true;
 

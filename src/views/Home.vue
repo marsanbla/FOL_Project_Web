@@ -45,23 +45,15 @@
               </button>
             </router-link>
 
-            <a href="#">
-              <span class="material-icons-sharp"> sports_esports </span>
-
-              <button
-                class="tab-button active"
-                onclick="changeTab(event, 'tab-4')"
-              >
-                Gameplay
-              </button>
-            </a>
-            <a href="#">
-              <span class="material-icons-sharp"> settings </span>
-
-              <button class="tab-button" onclick="changeTab(event, 'tab-5')">
+            <router-link to="/home/userp">
+              <button class="material-icons-sharp">settings</button>
+              <button class="tab-button" onclick="changeTab(event, 'tab-4')">
                 User Panel
+
               </button>
-            </a>
+            </router-link>
+
+       
             <a href="#">
               <span class="material-icons-sharp"> logout </span>
 

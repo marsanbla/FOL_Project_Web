@@ -197,7 +197,6 @@ app.post('/registerUserVue', async(req, res) => {
     }
 });
 
-
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async(req, res) => {
     res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
@@ -463,7 +462,7 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findEmailAsync(name);
+            query = await adminUsers.findPlayerAsync1(name);
 
             console.log("Query: ", query);
 
@@ -488,13 +487,13 @@ async function checkUserFromJson(name, passwd) {
 
             }
 
-            ret.name = query.email;
+            ret.name = query.name;
             contrasenyaBase = query.pwd;
             ret.roles = ['user'];
 
 
 
-            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
 
                 ret.isAuth = true;
 
@@ -597,12 +596,15 @@ app.post("/deletePost", async(req, res) => {
 
 });
 
-app.post("/usersPost", async(req, res) => {
+app.post("/usersPost1", async(req, res) => {
+    
+    connexio.iniciar();
 
-    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
+    //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
 
     let users = await adminUsers.getPlayersAsync();
     session.users = users;
+    console.log(users);
     res.send(JSON.stringify(users))
 
 

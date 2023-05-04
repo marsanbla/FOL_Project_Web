@@ -78,6 +78,7 @@ async function findPlayerAsync(name) {
     if (existingPlayerUserName != null) {
         usernameTrobat = true
     }
+    //TRUE SI EL TROBA
     return usernameTrobat
 
 

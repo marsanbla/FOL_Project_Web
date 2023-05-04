@@ -135,7 +135,9 @@ export default {
           this.$router.push("/home"); // redirect to the dashboard page
         }*/
         if (response.status == 202) {
+          console.log("Ha entrat al response estatus del do login");
           auth=true;
+          console.log("Auth: " ,auth);
           //localStorage.setItem("token", token); // update the token in localStorage
           this.$router.push({ name: "Home" });
           alert("You are now logged in");
@@ -166,7 +168,8 @@ export default {
       return data;
     },
     doPromiseFetchPost(url, data, callback) {
-      this.loading = true;
+      //this.loading = true;
+
 
       var promResponse = fetch(url, {
         method: "POST",
@@ -181,7 +184,7 @@ export default {
       return promResponse;
     },
     doFetchPost(url, data, callback) {
-      this.loading = true;
+      //this.loading = true;
 
       fetch(url, {
         method: "POST",
@@ -222,10 +225,10 @@ export default {
         } else {
           this.text = "No autoritzat";
         }
-        this.loading = false;
+        //this.loading = false;
       };
 
-      this.doFetchPost(
+      return this.doPromiseFetchPost(
         "http://localhost:3000/authPost",
         { name: this.emailLogin, password: this.passwordLogin },
         callback
@@ -236,7 +239,7 @@ export default {
         console.log("Resposta dins del register: ", this.response);
         this.snackbar = true;
         this.text = this.postData.text;
-        this.loading = false;
+        //this.loading = false;
         this.auth = false;
         this.loginpage = true;
       };

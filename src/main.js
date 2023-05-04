@@ -75,13 +75,20 @@ const router = createRouter({
 
 })
 
+async function esperaResultatLogin(){
+    return await Login.methods.doLogin();
+}
+
+var resultatLogin=await esperaResultatLogin();
+
 router.beforeEach((to, from, next) => {
+
     if (to.meta.requiresAuth) {
-        console.log("Autoritzat dintre before each: ", Login.methods.doLogin());
-        if (Login.methods.doLogin()) {
+        console.log("Autoritzat dintre before each: ",  resultatLogin);
+        if (resultatLogin) {
             next();
         } else {
-            next("/login");
+            next("/");
         }
     } else {
         next();

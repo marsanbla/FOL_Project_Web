@@ -60,7 +60,7 @@ app.post('/upload', async(req, res) => {
 
 
 
-const PORT = 3012;
+const PORT = 3000;
 app.use(bodyParser.json());
 var users = [];
 

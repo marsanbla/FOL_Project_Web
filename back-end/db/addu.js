@@ -109,6 +109,9 @@ async function findEmailAsync(email) {
     if (existingPlayerEmail != null) {
         emailTrobat = true
     }
+
+    console.log("Salt dins findEmail: ", existingPlayerEmail.query);
+
     return existingPlayerEmail;
 }
 

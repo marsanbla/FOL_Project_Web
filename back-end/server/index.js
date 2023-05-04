@@ -354,6 +354,8 @@ app.post('/register', async(req, res) => {
 
 //Ruta a /auth amb dos parametres que s'envien per "param"
 app.post("/authPost", async(req, res) => {
+    connexio.iniciar();
+
     res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
 
 
@@ -361,7 +363,6 @@ app.post("/authPost", async(req, res) => {
 
 
 
-    connexio.iniciar();
 
     let name = req.body.name;
     let passwd = req.body.password;
@@ -462,7 +463,7 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findPlayerAsync1(name);
+            query = await adminUsers.findEmailAsync(name);
 
             console.log("Query: ", query);
 
@@ -493,7 +494,7 @@ async function checkUserFromJson(name, passwd) {
 
 
 
-            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
 
                 ret.isAuth = true;
 
@@ -597,7 +598,7 @@ app.post("/deletePost", async(req, res) => {
 });
 
 app.post("/usersPost1", async(req, res) => {
-    
+
     connexio.iniciar();
 
     //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response

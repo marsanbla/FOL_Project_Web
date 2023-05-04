@@ -111,7 +111,7 @@ async function findEmailAsync(email) {
         emailTrobat = true
     }
 
-    console.log("Salt dins findEmail: ", existingPlayerEmail.query);
+    //console.log("Salt dins findEmail: ", existingPlayerEmail.salt);
 
     return existingPlayerEmail;
 }

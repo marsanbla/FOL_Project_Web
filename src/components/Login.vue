@@ -93,8 +93,14 @@
     </div>
   </div>
 </template>
-
 <script>
+
+var isAuth=false;
+
+export function getAuth(){
+  return isAuth;
+}
+
 export default {
   data() {
     return {
@@ -114,17 +120,28 @@ export default {
       this.message = "Hello, Vue!";
     },
     async doLogin() {
+
+      var auth=false;
       if (this.emailLogin === "" || this.passwordLogin === "") {
         this.emptyFields = true;
       } else {
         console.log("Ha entrat al else del do login");
-        var response= await this.getAuthPost();
-        if (response.status==202) {
+        var response = await this.getAuthPost();
+        //var data = this.doDataFromResponse(response);
+        //console.log("Data is auth: ", data.isAuth);
+        /*if (data.isAuth) {
+          const token = data.isAuth;
+          localStorage.setItem("token", token); // update the token in localStorage
+          this.$router.push("/home"); // redirect to the dashboard page
+        }*/
+        if (response.status == 202) {
+          auth=true;
+          //localStorage.setItem("token", token); // update the token in localStorage
           this.$router.push({ name: "Home" });
           alert("You are now logged in");
-
         }
       }
+      return auth;
     },
     async doRegister() {
       if (
@@ -224,7 +241,7 @@ export default {
       };
       console.log("Email: ", this.emailReg, " Password: ", this.passwordReg);
       return this.doPromiseFetchPost(
-        "http://localhost:3000/registerUserAndroid",
+        "http://localhost:3000/registerUserVue",
         { email: this.emailReg, password: this.passwordReg },
         callback
       );

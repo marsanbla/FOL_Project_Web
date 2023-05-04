@@ -13,11 +13,14 @@ import Dashboard from './views/Dashboard.vue'
 import Chart from 'chart.js/auto';
 //import Vuetify from 'vuetify'
 //import 'vuetify/dist/vuetify.css'
+import Login from './components/Login.vue'
 
 
 
 //const vuetify = new Vuetify()
 
+
+const isUserLoggedIn = true;
 
 const router = createRouter({
 
@@ -27,6 +30,7 @@ const router = createRouter({
             path: '/home',
             name: 'Home',
             component: Home,
+
             meta: {
                 requiresAuth: true,
             },
@@ -55,7 +59,12 @@ const router = createRouter({
         { path: '/about', name: 'About', component: About },
         { path: '/users', name: 'users', component: Users },
         { path: '/stats', name: 'stats', component: Stats },
-        { path: '/', name: 'login', component: LoginView },
+        {
+            path: '/',
+            name: 'login',
+            component: LoginView,
+
+        },
         { path: '/panama', name: 'panama', component: Panama },
         { path: '/dashboard', name: 'dashboard', component: Dashboard },
 
@@ -66,6 +75,18 @@ const router = createRouter({
 
 })
 
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth) {
+        console.log("Autoritzat dintre before each: ", Login.methods.doLogin());
+        if (Login.methods.doLogin()) {
+            next();
+        } else {
+            next("/login");
+        }
+    } else {
+        next();
+    }
+})
 
 createApp(App)
     .use(router)

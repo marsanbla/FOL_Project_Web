@@ -24,8 +24,10 @@ const upload = multer({ dest: 'uploads/' });
 // Serve static files from the public directory
 app.use(express.static('public'));
 
+
+//Adress mongoDB remota: mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test
 async function connectToDatabase() {
-    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', {
+    const client = await MongoClient.connect('mongodb://127.0.0.1:27017/test', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });

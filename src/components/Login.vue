@@ -127,6 +127,7 @@ export default {
         this.confirmReg === ""
       ) {
         this.emptyFields = true;
+        getUserList();
       } else {
         this.register();
         alert("You are now registered");
@@ -175,11 +176,8 @@ export default {
         this.loading = false;
       };
 
-      this.doFetchPost(
-        "http://localhost:3000/authPost",
-        { name: this.emailLogin, password: this.passwordLogin },
-        callback
-      );
+      this.doFetchPost("http://localhost:3000/authPost", { name: this.emailLogin, password: this.passwordLogin },
+       callback);
     },
     register() {
       var callback = () => {

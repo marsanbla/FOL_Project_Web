@@ -86,7 +86,7 @@
           </tr>
         </tbody>
       </table>
-      <router-link to="/users"
+      <router-link to="/home/users"
         ><button style="color: blue">Show all</button></router-link
       >
     </div>

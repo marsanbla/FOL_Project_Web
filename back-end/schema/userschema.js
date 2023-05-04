@@ -3,10 +3,12 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 
 var playerSchema = new schema({
-    first_name: String,
-    last_name: String,
+    name: String,
     email:String,
-    id:String
+    id:String,
+    pwd:String,
+    salt:String
+
     
 
 });

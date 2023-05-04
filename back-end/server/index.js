@@ -108,14 +108,12 @@ app.use(express.json());
 
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async(req, res) => {
-    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
-
 
     //console.log("Ha entrat a register");
 
     connexio.iniciar();
 
-    //let nom = req.body.name;
+    let nom = req.body.name;
     let email = req.body.email;
     let passwd = req.body.password;
     const saltRounds = 10;
@@ -123,7 +121,7 @@ app.post('/registerUserAndroid', async(req, res) => {
 
 
     let player = {
-        //name: nom,
+        name: nom,
         email: email,
         pwd: passwd,
         salt: "",
@@ -132,8 +130,8 @@ app.post('/registerUserAndroid', async(req, res) => {
         investedMinutes: 0,
         mSesions: 0
     };
-    console.log("PARAMS " + email + "/" + passwd)
-        //console.log("PARAMS " + nom + "/" + email + "/" + passwd)
+
+    console.log("PARAMS " + nom + "/" + email + "/" + passwd)
 
 
     // Regular expression for validating email addresses and password
@@ -141,18 +139,17 @@ app.post('/registerUserAndroid', async(req, res) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
     const pswdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,16}$/;
 
-    //AÑADIR metodo por si user no existe 
-    if (true /*emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom) */ ) {
-        //let existingPlayer = await adminUsers.findPlayerAsync(nom);
+    //AÑADIR metodo por si user no existe
+    if (emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom)) {
+        let existingPlayer = await adminUsers.findPlayerAsync(nom);
         let existingEmail = await adminUsers.findEmailAsync(email);
-        //console.log("existingPlayer: ", existingPlayer);
+        console.log("existingPlayer: ", existingPlayer);
 
-        /*if (existingPlayer) {
+        if (existingPlayer) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(455).send({ success: false, message: 'UserName already in use' });
             console.log("UserName already in use");
-        }*/
-        if (existingEmail) {
+        } else{if (existingEmail) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(456).send({ success: false, message: 'Email already in use' });
             console.log("Email already in use");
@@ -177,7 +174,8 @@ app.post('/registerUserAndroid', async(req, res) => {
             //res.send({ success: true });
             res.status(201).send({ success: true });
 
-        }
+        }}
+        
     } else {
         if (!emailRegex.test(email)) {
             //res.send('1');
@@ -370,7 +368,7 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findEmailAsync(name);
+            query = await adminUsers.findPlayerAsync1(name);
 
             console.log("Query: ", query);
 
@@ -395,13 +393,13 @@ async function checkUserFromJson(name, passwd) {
 
             }
 
-            ret.name = query.email;
+            ret.name = query.name;
             contrasenyaBase = query.pwd;
             ret.roles = ['user'];
 
 
 
-            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
 
                 ret.isAuth = true;
 
@@ -504,12 +502,15 @@ app.post("/deletePost", async(req, res) => {
 
 });
 
-app.post("/usersPost", async(req, res) => {
+app.post("/usersPost1", async(req, res) => {
+    
+    connexio.iniciar();
 
-    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
+    //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
 
     let users = await adminUsers.getPlayersAsync();
     session.users = users;
+    console.log(users);
     res.send(JSON.stringify(users))
 
 

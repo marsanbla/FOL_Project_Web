@@ -150,6 +150,7 @@ export default {
         this.confirmReg === ""
       ) {
         this.emptyFields = true;
+        getUserList();
       } else {
         var response = await this.register();
         //console.log("Post data: ", this.postData);
@@ -224,7 +225,7 @@ export default {
         this.loading = false;
       };
 
-      return this.doPromiseFetchPost(
+      this.doFetchPost(
         "http://localhost:3000/authPost",
         { name: this.emailLogin, password: this.passwordLogin },
         callback

@@ -52,6 +52,14 @@
 
               </button>
             </router-link>
+            <router-link to="/home/temas">
+              <button class="material-icons-sharp">settings</button>
+              <button class="tab-button" onclick="changeTab(event, 'tab-4')">
+                Book Content
+
+              </button>
+            </router-link>
+
 
        
             <a href="#">

@@ -75,9 +75,6 @@ export default {
     font-family: 'Poppins', sans-serif;
 }
 
-body {
-    background: black;
-}
 
 .wrapper {
     width: 100%;

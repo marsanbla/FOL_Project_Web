@@ -5,7 +5,7 @@
           Link with href
         </a>
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-          Button with data-bs-target
+          Button with dat a-bs-target   
         </button>
       </p>
       <div class="collapse" id="collapseExample">

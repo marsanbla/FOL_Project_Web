@@ -3,8 +3,8 @@
     <router-link to="/">Home</router-link>
     <router-link to="/brazil">Brazil</router-link>
     <router-link to="/hawaii">Hawaii</router-link>
-    <router-link to="/jamaica">Jamaica</router-link>
-    <router-link to="/panama">Panama</router-link>
+    <router-link to="/users">Users</router-link>
+    <router-link to="/userp">User Panel</router-link>
     <!--img src="public\images\logo.png"/-->
   </div>
 
@@ -45,23 +45,23 @@
               </button>
             </router-link>
 
-            <a href="#">
-              <span class="material-icons-sharp"> sports_esports </span>
-
-              <button
-                class="tab-button active"
-                onclick="changeTab(event, 'tab-4')"
-              >
-                Gameplay
-              </button>
-            </a>
-            <a href="#">
-              <span class="material-icons-sharp"> settings </span>
-
-              <button class="tab-button" onclick="changeTab(event, 'tab-5')">
+            <router-link to="/home/userp">
+              <button class="material-icons-sharp">settings</button>
+              <button class="tab-button" onclick="changeTab(event, 'tab-4')">
                 User Panel
+
               </button>
-            </a>
+            </router-link>
+            <router-link to="/home/temas">
+              <button class="material-icons-sharp">settings</button>
+              <button class="tab-button" onclick="changeTab(event, 'tab-4')">
+                Book Content
+
+              </button>
+            </router-link>
+
+
+       
             <a href="#">
               <span class="material-icons-sharp"> logout </span>
 

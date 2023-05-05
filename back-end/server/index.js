@@ -16,8 +16,9 @@ const connexio = require('../db/poolmongo.js');
 const adminSettings = require('../db/usersettings.js');
 const { notEqual } = require('assert');
 const multer = require('multer');
+const mongoUri =
+  "mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test";
 
-const upload = multer({ dest: 'uploads/' });
 
 
 
@@ -44,21 +45,51 @@ app.use(cors());
 });*/
 
 
-
-app.post('/upload', async(req, res) => {
-    try {
-        const db = await connectToDatabase();
-
-        const collection = db.collection('profile-pictures');
-        const result = await collection.insertOne({ image: req.body.image });
-
-        res.send('Profile picture uploaded successfully');
-    } catch (e) {
-        console.error(e);
-        res.status(500).send('Error uploading profile picture');
-    }
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
+const upload = multer({ storage: storage });
+
+app.post(
+  "/saveprofileimage",
+  upload.single("profileImage"),
+  async (req, res) => {
+    try {
+      const client = await MongoClient.connect(mongoUri);
+      const db = client.db();
+      const collection = db.collection("images");
+      const result = await collection.insertOne({
+        name: req.file.filename,
+        path: req.file.path,
+      });
+      client.close();
+      res.send({ message: "Image uploaded successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: "Error uploading image" });
+    }
+  }
+);
+
+app.delete("/deleteprofileimage", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoUri);
+    const db = client.db();
+    const collection = db.collection("images");
+    const result = await collection.deleteMany({});
+    client.close();
+    res.send({ message: "Image deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error deleting image" });
+  }
+});
 
 
 
@@ -109,7 +140,7 @@ app.use(express.json());
 
 
 //FUNCIO REGISTRO ANDROID
-app.post('/registerUserVue', async(req, res) => {
+/*app.post('/registerUserVue', async(req, res) => {
     res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
 
 
@@ -130,7 +161,7 @@ app.post('/registerUserVue', async(req, res) => {
         pwd: passwd,
         salt: "",
         rol: "user",
-        /*Player Stats*/
+        /*Player Stats
         investedMinutes: 0,
         mSesions: 0
     };
@@ -144,7 +175,7 @@ app.post('/registerUserVue', async(req, res) => {
     const pswdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,16}$/;
 
     //AÑADIR metodo por si user no existe 
-    if (true /*emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom) */ ) {
+    if (true /*emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom) * ) {
         //let existingPlayer = await adminUsers.findPlayerAsync(nom);
         let existingEmail = await adminUsers.findEmailAsync(email);
         //console.log("existingPlayer: ", existingPlayer);
@@ -153,7 +184,7 @@ app.post('/registerUserVue', async(req, res) => {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(455).send({ success: false, message: 'UserName already in use' });
             console.log("UserName already in use");
-        }*/
+        }
         if (existingEmail) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(456).send({ success: false, message: 'Email already in use' });
@@ -197,7 +228,7 @@ app.post('/registerUserVue', async(req, res) => {
             console.log("User is not correct");
         }
     }
-});
+});*/
 
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async(req, res) => {

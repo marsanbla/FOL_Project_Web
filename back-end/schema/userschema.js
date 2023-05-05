@@ -1,18 +1,16 @@
+const { Int32 } = require('mongodb');
 var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 
 var playerSchema = new schema({
     name: String,
     email:String,
-    pwd: String,
-    salt: String,
-    rol: String,
+    id:String,
+    pwd:String,
+    salt:String
 
-    /*Player Stats*/
-    investedSeconds: Number,
-    rounds: Number,
     
-    deads: Number
+
 });
 module.exports = {
     playerModel: mongoose.model('Player', playerSchema),

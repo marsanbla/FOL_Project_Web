@@ -13,7 +13,7 @@ import Dashboard from './views/Dashboard.vue'
 import Chart from 'chart.js/auto';
 //import Vuetify from 'vuetify'
 //import 'vuetify/dist/vuetify.css'
-
+import TemasLibro from './views/TemasLibro.vue'
 
 
 //const vuetify = new Vuetify()
@@ -49,9 +49,13 @@ const router = createRouter({
                     path: 'userp',
                     name: 'User Panel',
                     component: UserP,
-                }
+                },
 
-                    
+                {
+                    path: 'temas',
+                    name: 'Temas Libro',
+                    component: TemasLibro,
+                }
 
 
             ]
@@ -65,6 +69,7 @@ const router = createRouter({
         { path: '/', name: 'login', component: LoginView },
         { path: '/userp', name: 'user', component: UserP },
         { path: '/dashboard', name: 'dashboard', component: Dashboard },
+        { path: '/temas', name: 'Temas', component: TemasLibro }
 
 
 

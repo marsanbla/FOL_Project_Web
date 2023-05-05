@@ -24,7 +24,7 @@
 import axios from 'axios';
 
 export default {
-    name: 'ProfileImage',
+    name: 'profileImage',
     data() {
         return {
             profileImageUrl: localStorage.getItem('profileImageUrl') || '',

@@ -52,8 +52,15 @@
 
               </button>
             </router-link>
+            <router-link to="/home/temas">
+              <button class="material-icons-sharp">settings</button>
+              <button class="tab-button" onclick="changeTab(event, 'tab-5')">
+                Temas Libro(test)
 
-       
+              </button>
+            </router-link>
+
+
             <a href="#">
               <span class="material-icons-sharp"> logout </span>
 
@@ -198,6 +205,7 @@ export default {
   list-style: none;
   box-sizing: border-box;
 }
+
 aside {
   height: 100vh;
 }
@@ -308,7 +316,7 @@ main .insights {
   gap: 1.6rem;
 }
 
-main .insights > div {
+main .insights>div {
   background: var(--color-white);
   padding: var(--card-padding);
   border-radius: var(--border-radius-1);
@@ -317,11 +325,11 @@ main .insights > div {
   transition: all 300ms ease;
 }
 
-main .insights > div:hover {
+main .insights>div:hover {
   box-shadow: none;
 }
 
-main .insights > div.players span {
+main .insights>div.players span {
   border-radius: 50%;
   background-color: var(--color-primary);
   padding: 0.5rem;
@@ -329,7 +337,7 @@ main .insights > div.players span {
   color: var(--color-white);
 }
 
-main .insights > div.gametime span {
+main .insights>div.gametime span {
   background-color: var(--color-danger);
   border-radius: 50%;
   padding: 0.5rem;
@@ -337,14 +345,14 @@ main .insights > div.gametime span {
   color: var(--color-white);
 }
 
-main .insights > div.money span {
+main .insights>div.money span {
   background-color: var(--color-success);
   padding: 0.5rem;
   border-radius: 50%;
   color: var(--color-white);
 }
 
-main .insights > div .middle {
+main .insights>div .middle {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -445,6 +453,7 @@ main .users a {
   margin: 1rem auto;
   color: var(--color-primary);
 }
+
 .right {
   margin-top: 1.4rem;
 }
@@ -517,6 +526,7 @@ main .users a {
   gap: 1rem;
   margin-bottom: 1rem;
 }
+
 .col-lg-2 {
   padding-right: 50px;
 }
@@ -602,6 +612,7 @@ b {
 .warning {
   color: var(--color-warning);
 }
+
 /* Navigation */
 
 #nav {
@@ -630,5 +641,4 @@ b {
 #nav a.router-link-active,
 #nav a:hover {
   opacity: 1;
-}
-</style>
+}</style>

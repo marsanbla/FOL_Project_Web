@@ -208,6 +208,7 @@ export default {
 }
 aside {
   height: 100vh;
+  width: max-content;
 }
 
 aside .top {

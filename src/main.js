@@ -14,37 +14,41 @@ import TemasLibro from "./views/TemasLibro.vue";
 import Chart from "chart.js/auto";
 //import Vuetify from 'vuetify'
 //import 'vuetify/dist/vuetify.css'
+import Login from './components/Login.vue'
 
 //const vuetify = new Vuetify()
 
-const router = createRouter({
-  history: createWebHashHistory(),
 
-  routes: [
-    {
-      path: "/home",
-      name: "Home",
-      component: Home,
-      meta: {
-        requiresAuth: true,
-      },
-      children: [
-        {
-          path: "dashboard",
-          name: "Dashboard",
-          component: Dashboard,
-        },
-        {
-          path: "users",
-          name: "Users",
-          component: Users,
-        },
-        {
-          path: "stats",
-          name: "Stats",
-          component: Stats,
-        },
-        {
+const isUserLoggedIn = true;
+
+const router = createRouter({
+
+    history: createWebHashHistory(),
+
+    routes: [{
+            path: '/home',
+            name: 'Home',
+            component: Home,
+
+            meta: {
+                requiresAuth: true,
+            },
+            children: [{
+                    path: 'dashboard',
+                    name: 'Dashboard',
+                    component: Dashboard,
+                },
+                {
+                    path: 'users',
+                    name: 'Users',
+                    component: Users,
+                },
+                {
+                    path: 'stats',
+                    name: 'Stats',
+                    component: Stats,
+                },
+                 {
           path: "userp",
           name: "User Panel",
           component: UserP,
@@ -54,17 +58,53 @@ const router = createRouter({
           name: "Temas Libro",
           component: TemasLibro,
         },
-      ],
-    },
-    { path: "/about", name: "About", component: About },
-    { path: "/users", name: "users", component: Users },
-    { path: "/stats", name: "stats", component: Stats },
-    { path: "/", name: "login", component: LoginView },
-    { path: "/userp", name: "user", component: UserP },
-    { path: "/dashboard", name: "dashboard", component: Dashboard },
-    { path: "/temas", name: "temas", component: TemasLibro }
-  ],
-});
+
+            ]
+
+
+
+        },
+        { path: '/about', name: 'About', component: About },
+        { path: '/users', name: 'users', component: Users },
+        { path: '/stats', name: 'stats', component: Stats },
+        {
+            path: '/',
+            name: 'login',
+            component: LoginView,
+
+        },
+        
+        { path: "/userp", name: "user", component: UserP },
+        { path: "/temas", name: "temas", component: TemasLibro }
+        { path: '/dashboard', name: 'dashboard', component: Dashboard },
+
+
+
+
+    ]
+
+})
+
+async function esperaResultatLogin(){
+    return await Login.methods.doLogin();
+}
+
+var resultatLogin=await esperaResultatLogin();
+
+router.beforeEach((to, from, next) => {
+
+    if (to.meta.requiresAuth) {
+        console.log("Autoritzat dintre before each: ",  resultatLogin);
+        if (resultatLogin) {
+            next();
+        } else {
+            next("/");
+        }
+    } else {
+        next();
+    }
+})
+
 
 createApp(App)
   .use(router)

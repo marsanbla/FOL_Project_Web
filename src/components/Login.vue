@@ -93,8 +93,14 @@
     </div>
   </div>
 </template>
-
 <script>
+
+var isAuth=false;
+
+export function getAuth(){
+  return isAuth;
+}
+
 export default {
   data() {
     return {
@@ -114,17 +120,30 @@ export default {
       this.message = "Hello, Vue!";
     },
     async doLogin() {
+
+      var auth=false;
       if (this.emailLogin === "" || this.passwordLogin === "") {
         this.emptyFields = true;
       } else {
         console.log("Ha entrat al else del do login");
-        var response= await this.getAuthPost();
-        if (response.status==202) {
+        var response = await this.getAuthPost();
+        //var data = this.doDataFromResponse(response);
+        //console.log("Data is auth: ", data.isAuth);
+        /*if (data.isAuth) {
+          const token = data.isAuth;
+          localStorage.setItem("token", token); // update the token in localStorage
+          this.$router.push("/home"); // redirect to the dashboard page
+        }*/
+        if (response.status == 202) {
+          console.log("Ha entrat al response estatus del do login");
+          auth=true;
+          console.log("Auth: " ,auth);
+          //localStorage.setItem("token", token); // update the token in localStorage
           this.$router.push({ name: "Home" });
           alert("You are now logged in");
-
         }
       }
+      return auth;
     },
     async doRegister() {
       if (
@@ -133,6 +152,7 @@ export default {
         this.confirmReg === ""
       ) {
         this.emptyFields = true;
+        getUserList();
       } else {
         var response = await this.register();
         //console.log("Post data: ", this.postData);
@@ -148,7 +168,8 @@ export default {
       return data;
     },
     doPromiseFetchPost(url, data, callback) {
-      this.loading = true;
+      //this.loading = true;
+
 
       var promResponse = fetch(url, {
         method: "POST",
@@ -163,7 +184,7 @@ export default {
       return promResponse;
     },
     doFetchPost(url, data, callback) {
-      this.loading = true;
+      //this.loading = true;
 
       fetch(url, {
         method: "POST",
@@ -204,7 +225,7 @@ export default {
         } else {
           this.text = "No autoritzat";
         }
-        this.loading = false;
+        //this.loading = false;
       };
 
       return this.doPromiseFetchPost(
@@ -218,13 +239,13 @@ export default {
         console.log("Resposta dins del register: ", this.response);
         this.snackbar = true;
         this.text = this.postData.text;
-        this.loading = false;
+        //this.loading = false;
         this.auth = false;
         this.loginpage = true;
       };
       console.log("Email: ", this.emailReg, " Password: ", this.passwordReg);
       return this.doPromiseFetchPost(
-        "http://localhost:3000/registerUserAndroid",
+        "http://localhost:3000/registerUserVue",
         { email: this.emailReg, password: this.passwordReg },
         callback
       );

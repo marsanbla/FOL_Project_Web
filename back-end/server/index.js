@@ -464,7 +464,7 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findPlayerAsync1(name);
+            query = await adminUsers.findEmailAsync(name);
 
             console.log("Query: ", query);
 
@@ -495,7 +495,7 @@ async function checkUserFromJson(name, passwd) {
 
 
 
-            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
 
                 ret.isAuth = true;
 

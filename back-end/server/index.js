@@ -24,8 +24,10 @@ const upload = multer({ dest: 'uploads/' });
 // Serve static files from the public directory
 app.use(express.static('public'));
 
+const dbName = 'FOL_PROJECT';
+
 async function connectToDatabase() {
-    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', {
+    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/'+dbName, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
@@ -350,7 +352,6 @@ app.post('/register', async(req, res) => {
 
     }
 });
-
 
 //Ruta a /auth amb dos parametres que s'envien per "param"
 app.post("/authPost", async(req, res) => {

@@ -53,13 +53,15 @@ async function deletePlayerAsync(nickemail) {
 
     console.log("Ha entrat a delete player async");
 
+    let borrat;
 
+    try {
+        borrat = await playersCollection.playerModel.findOneAndDelete({ name: nickemail }).clone();
 
-    let borrat = await playersCollection.playerModel.deleteOne({ email: nickemail }, function(err) {
-        if (err) {
-            console.log(err);
-        }
-    }).clone();
+    } catch (err) {
+        console.log(err)
+    }
+
 
     console.log("Usuari borrat: ", borrat)
 
@@ -68,12 +70,12 @@ async function deletePlayerAsync(nickemail) {
 }
 
 
-async function findPlayerAsync(name) {
+async function findPlayerAsync(Username) {
 
     console.log("Ha entrat a findPlayer");
 
     let usernameTrobat = false;
-    let existingPlayerUserName = await playersCollection.playerModel.findOne({ name: name }).exec();
+    let existingPlayerUserName = await playersCollection.playerModel.findOne({ name: Username }).exec();
 
     if (existingPlayerUserName != null) {
         usernameTrobat = true

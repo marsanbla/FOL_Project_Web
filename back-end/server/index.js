@@ -140,7 +140,7 @@ app.use(express.json());
 
 
 //FUNCIO REGISTRO ANDROID
-/*app.post('/registerUserVue', async(req, res) => {
+app.post('/registerUserVue', async(req, res) => {
     res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
 
 
@@ -161,7 +161,7 @@ app.use(express.json());
         pwd: passwd,
         salt: "",
         rol: "user",
-        /*Player Stats
+        /*Player Stats*/
         investedMinutes: 0,
         mSesions: 0
     };
@@ -175,7 +175,7 @@ app.use(express.json());
     const pswdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,16}$/;
 
     //AÑADIR metodo por si user no existe 
-    if (true /*emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom) * ) {
+    if (true /*emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom) */ ) {
         //let existingPlayer = await adminUsers.findPlayerAsync(nom);
         let existingEmail = await adminUsers.findEmailAsync(email);
         //console.log("existingPlayer: ", existingPlayer);
@@ -184,7 +184,7 @@ app.use(express.json());
             //res.send({ success: false, message: 'Email already in use' });
             res.status(455).send({ success: false, message: 'UserName already in use' });
             console.log("UserName already in use");
-        }
+        }*/
         if (existingEmail) {
             //res.send({ success: false, message: 'Email already in use' });
             res.status(456).send({ success: false, message: 'Email already in use' });
@@ -228,7 +228,7 @@ app.use(express.json());
             console.log("User is not correct");
         }
     }
-});*/
+});
 
 //FUNCIO REGISTRO ANDROID
 app.post('/registerUserAndroid', async(req, res) => {

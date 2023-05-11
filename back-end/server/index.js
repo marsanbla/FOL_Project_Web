@@ -16,8 +16,10 @@ const connexio = require('../db/poolmongo.js');
 const adminSettings = require('../db/usersettings.js');
 const { notEqual } = require('assert');
 const multer = require('multer');
+
+const dbName = 'FOL_PROJECT';
 const mongoUri =
-  "mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test";
+'mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/'+dbName;
 
 
 
@@ -25,10 +27,9 @@ const mongoUri =
 // Serve static files from the public directory
 app.use(express.static('public'));
 
-const dbName = 'FOL_PROJECT';
 
 async function connectToDatabase() {
-    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/'+dbName, {
+    const client = await MongoClient.connect(mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
@@ -52,6 +53,25 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
   },
+});
+
+app.post("/fetchQuestions", async(req, res) => {
+    //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
+
+
+    console.log("Ha entrat a fetch");
+
+    connexio.iniciar();
+
+    
+    ret = await QuestionsFromJson();
+
+    console.log("Ret:", ret);
+
+   res.send(ret);
+
+
+
 });
 
 const upload = multer({ storage: storage });
@@ -93,7 +113,7 @@ app.delete("/deleteprofileimage", async (req, res) => {
 
 
 
-const PORT = 3000;
+const PORT = 3012;
 app.use(bodyParser.json());
 var users = [];
 
@@ -391,8 +411,6 @@ app.post("/authPost", async(req, res) => {
 
     console.log("Ha entrat a auth");
 
-
-
     connexio.iniciar();
 
     let name = req.body.name;
@@ -477,6 +495,15 @@ app.listen(PORT, () => {
 });
 
 
+const questionsCollection = require('../schema/questionschema.js');
+async function QuestionsFromJson(){
+    let questions = await questionsCollection.questionModel.find();
+    console.log(JSON.stringify(questions));
+    return questions;
+}
+
+
+
 async function checkUserFromJson(name, passwd) {
     let query = "";
     let nom = "";
@@ -510,7 +537,6 @@ async function checkUserFromJson(name, passwd) {
             try {
                 //console.log("AAAAAAAAAAAA")
                 console.log("SALT " + query.salt)
-                    //ESTA LINIA ES LA QUE PETA
                 contrasenyaAComprovar = await hashPassword(passwd, query.salt);
 
 

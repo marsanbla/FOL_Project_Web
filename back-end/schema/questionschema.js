@@ -9,5 +9,5 @@ var questionSchema = new schema({
     resposta: String,
 });
 module.exports = {
-    settingsModel: mongoose.model('Preguntes', questionSchema),
+    questionModel: mongoose.model('Preguntes', questionSchema),
 }

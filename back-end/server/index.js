@@ -16,8 +16,9 @@ const connexio = require('../db/poolmongo.js');
 const adminSettings = require('../db/usersettings.js');
 const { notEqual } = require('assert');
 const multer = require('multer');
+const mongoUri =
+  "mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test";
 
-const upload = multer({ dest: 'uploads/' });
 
 
 
@@ -44,25 +45,55 @@ app.use(cors());
 });*/
 
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
-app.post('/upload', async(req, res) => {
+const upload = multer({ storage: storage });
+
+app.post(
+  "/saveprofileimage",
+  upload.single("profileImage"),
+  async (req, res) => {
     try {
-        const db = await connectToDatabase();
-
-        const collection = db.collection('profile-pictures');
-        const result = await collection.insertOne({ image: req.body.image });
-
-        res.send('Profile picture uploaded successfully');
-    } catch (e) {
-        console.error(e);
-        res.status(500).send('Error uploading profile picture');
+      const client = await MongoClient.connect(mongoUri);
+      const db = client.db();
+      const collection = db.collection("images");
+      const result = await collection.insertOne({
+        name: req.file.filename,
+        path: req.file.path,
+      });
+      client.close();
+      res.send({ message: "Image uploaded successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: "Error uploading image" });
     }
+  }
+);
+
+app.delete("/deleteprofileimage", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoUri);
+    const db = client.db();
+    const collection = db.collection("images");
+    const result = await collection.deleteMany({});
+    client.close();
+    res.send({ message: "Image deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error deleting image" });
+  }
 });
 
 
 
-
-const PORT = 3012;
+const PORT = 3000;
 app.use(bodyParser.json());
 var users = [];
 
@@ -463,7 +494,7 @@ async function checkUserFromJson(name, passwd) {
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findPlayerAsync1(name);
+            query = await adminUsers.findEmailAsync(name);
 
             console.log("Query: ", query);
 
@@ -494,7 +525,7 @@ async function checkUserFromJson(name, passwd) {
 
 
 
-            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
 
                 ret.isAuth = true;
 

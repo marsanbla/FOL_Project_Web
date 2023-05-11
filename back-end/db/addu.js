@@ -74,6 +74,7 @@ async function findPlayerAsync(name) {
 
     let usernameTrobat = false;
     let existingPlayerUserName = await playersCollection.playerModel.findOne({ name: name }).exec();
+    
 
     if (existingPlayerUserName != null) {
         usernameTrobat = true
@@ -83,11 +84,13 @@ async function findPlayerAsync(name) {
 
 
 }
-async function findPlayerAsync1(name) {
-    console.log("Ha entrat a findPlayer");
+async function findPlayerAsync1(name){
+    console.log("Ha entrat a findPlayer1");
     let res = null;
     let usernameTrobat = false;
     let existingPlayer = await playersCollection.playerModel.findOne({ name: name }).exec();
+
+    console.log("Existing player: ", existingPlayer);
 
     if (existingPlayer != null) {
         usernameTrobat = true
@@ -110,6 +113,9 @@ async function findEmailAsync(email) {
     if (existingPlayerEmail != null) {
         emailTrobat = true
     }
+
+    //console.log("Salt dins findEmail: ", existingPlayerEmail.query);
+
     return existingPlayerEmail;
 }
 

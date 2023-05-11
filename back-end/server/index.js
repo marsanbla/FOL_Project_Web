@@ -406,6 +406,7 @@ app.post('/register', async(req, res) => {
 
 //Ruta a /auth amb dos parametres que s'envien per "param"
 app.post("/authPost", async(req, res) => {
+
     res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response
 
 
@@ -655,7 +656,7 @@ app.post("/deletePost", async(req, res) => {
 });
 
 app.post("/usersPost1", async(req, res) => {
-    
+
     connexio.iniciar();
 
     //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5173'); // Add the header to the response

@@ -16,16 +16,19 @@ const connexio = require('../db/poolmongo.js');
 const adminSettings = require('../db/usersettings.js');
 const { notEqual } = require('assert');
 const multer = require('multer');
+const mongoUri =
+  "mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test";
 
-const upload = multer({ dest: 'uploads/' });
 
 
 
 // Serve static files from the public directory
 app.use(express.static('public'));
 
+const dbName = 'FOL_PROJECT';
+
 async function connectToDatabase() {
-    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/test', {
+    const client = await MongoClient.connect('mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/'+dbName, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
@@ -42,21 +45,51 @@ app.use(cors());
 });*/
 
 
-
-app.post('/upload', async(req, res) => {
-    try {
-        const db = await connectToDatabase();
-
-        const collection = db.collection('profile-pictures');
-        const result = await collection.insertOne({ image: req.body.image });
-
-        res.send('Profile picture uploaded successfully');
-    } catch (e) {
-        console.error(e);
-        res.status(500).send('Error uploading profile picture');
-    }
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
+const upload = multer({ storage: storage });
+
+app.post(
+  "/saveprofileimage",
+  upload.single("profileImage"),
+  async (req, res) => {
+    try {
+      const client = await MongoClient.connect(mongoUri);
+      const db = client.db();
+      const collection = db.collection("images");
+      const result = await collection.insertOne({
+        name: req.file.filename,
+        path: req.file.path,
+      });
+      client.close();
+      res.send({ message: "Image uploaded successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: "Error uploading image" });
+    }
+  }
+);
+
+app.delete("/deleteprofileimage", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoUri);
+    const db = client.db();
+    const collection = db.collection("images");
+    const result = await collection.deleteMany({});
+    client.close();
+    res.send({ message: "Image deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error deleting image" });
+  }
+});
 
 
 
@@ -350,7 +383,6 @@ app.post('/register', async(req, res) => {
 
     }
 });
-
 
 //Ruta a /auth amb dos parametres que s'envien per "param"
 app.post("/authPost", async(req, res) => {

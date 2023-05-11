@@ -7,7 +7,7 @@ import About from './views/About.vue'
 import Users from './views/Users.vue'
 import Stats from './views/Stats.vue'
 import LoginView from './views/LoginView.vue'
-import Panama from './views/Panama.vue'
+import Userp from './views/UserP.vue'
 import Dashboard from './views/Dashboard.vue'
 //import '/main.css'
 import Chart from 'chart.js/auto';
@@ -49,6 +49,14 @@ const router = createRouter({
                     name: 'Stats',
                     component: Stats,
                 },
+                {
+                    path: 'userp',
+                    name: 'Userp',
+                    component: Userp,
+
+                }
+
+
 
 
             ]
@@ -65,7 +73,7 @@ const router = createRouter({
             component: LoginView,
 
         },
-        { path: '/panama', name: 'panama', component: Panama },
+        { path: '/userp', name: 'userp', component: Userp },
         { path: '/dashboard', name: 'dashboard', component: Dashboard },
 
 
@@ -75,13 +83,17 @@ const router = createRouter({
 
 })
 
+
+
+
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
-        console.log("Autoritzat dintre before each: ", Login.methods.doLogin());
-        if (Login.methods.doLogin()) {
+        //console.log("Autoritzat dintre before each: ", Login.methods.doLogin());
+        console.log("Imprimir is loggedIn: ", localStorage.getItem('isLoggedIn') === 'true');
+        if (localStorage.getItem('isLoggedIn') === 'true') {
             next();
         } else {
-            next("/login");
+            next("/");
         }
     } else {
         next();

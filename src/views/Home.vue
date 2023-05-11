@@ -44,17 +44,12 @@
                 Stats
               </button>
             </router-link>
-
-            <a href="#">
-              <span class="material-icons-sharp"> sports_esports </span>
-
-              <button
-                class="tab-button active"
-                onclick="changeTab(event, 'tab-4')"
-              >
-                Gameplay
+            <router-link to="/home/userp">
+              <button class="material-icons-sharp">query_stats</button>
+              <button class="tab-button" onclick="changeTab(event, 'tab-4')">
+                UserP
               </button>
-            </a>
+            </router-link>
             <a href="#">
               <span class="material-icons-sharp"> settings </span>
 
@@ -144,6 +139,11 @@
 <script>
 export default {
   name: "ClickableSpan",
+  beforeRouteLeave(to, from, next) {
+    // set isLoggedIn to false when navigating away from the Home page
+    localStorage.setItem('isLoggedIn', 'false')
+    next()
+  },
   methods: {
     handleClick() {
       alert("You clicked the span!");

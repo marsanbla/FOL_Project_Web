@@ -94,6 +94,7 @@
   </div>
 </template>
 <script>
+localStorage.setItem('isLoggedIn', 'false')
 
 var isAuth=false;
 
@@ -113,6 +114,7 @@ export default {
       emptyFields: false,
       postData: null,
       response: null,
+      
     };
   },
   methods: {
@@ -136,6 +138,7 @@ export default {
         }*/
         if (response.status == 202) {
           auth=true;
+          localStorage.setItem('isLoggedIn', 'true')
           //localStorage.setItem("token", token); // update the token in localStorage
           this.$router.push({ name: "Home" });
           alert("You are now logged in");
@@ -166,7 +169,7 @@ export default {
       return data;
     },
     doPromiseFetchPost(url, data, callback) {
-      this.loading = true;
+      //this.loading = true;
 
       var promResponse = fetch(url, {
         method: "POST",
@@ -181,7 +184,7 @@ export default {
       return promResponse;
     },
     doFetchPost(url, data, callback) {
-      this.loading = true;
+      //this.loading = true;
 
       fetch(url, {
         method: "POST",
@@ -222,10 +225,10 @@ export default {
         } else {
           this.text = "No autoritzat";
         }
-        this.loading = false;
+        //this.loading = false;
       };
 
-      this.doFetchPost(
+      return this.doPromiseFetchPost(
         "http://localhost:3000/authPost",
         { name: this.emailLogin, password: this.passwordLogin },
         callback
@@ -236,7 +239,7 @@ export default {
         console.log("Resposta dins del register: ", this.response);
         this.snackbar = true;
         this.text = this.postData.text;
-        this.loading = false;
+        //this.loading = false;
         this.auth = false;
         this.loginpage = true;
       };

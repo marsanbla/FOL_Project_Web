@@ -7,6 +7,8 @@
 </template>
 
 <script>
+localStorage.setItem('isLoggedIn', 'false')
+
 import Login from "../components/Login.vue";
 
 export default {

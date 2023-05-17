@@ -8,7 +8,7 @@ async function iniciar() {
     mongoose.set('strictQuery', false);
 
     //FOL_PROJECT
-    const dbName = "test";
+    const dbName = "FOL_PROJECT";
 
     var prom = await new Promise(async(resolve, reject) => {
 

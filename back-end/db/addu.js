@@ -34,7 +34,7 @@ async function getPlayersAsync() {
 
 async function updatePlayerAsync(idPlayer, playerNewStats) {
 
-    const filter = { email: idPlayer };
+    const filter = { name: idPlayer };
 
     const update = {
         investedSeconds: playerNewStats.investedSeconds,

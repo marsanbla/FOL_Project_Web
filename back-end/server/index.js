@@ -19,7 +19,7 @@ const multer = require('multer');
 
 const dbName = 'FOL_PROJECT';
 const mongoUri =
-'mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/'+dbName;
+    'mongodb+srv://folp:c5M2VIHa79LHT4vo@projecte.x0sc3re.mongodb.net/' + dbName;
 
 
 
@@ -47,12 +47,12 @@ app.use(cors());
 
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
+    destination: function(req, file, cb) {
+        cb(null, "./uploads");
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    },
 });
 
 app.post("/fetchQuestions", async(req, res) => {
@@ -63,12 +63,12 @@ app.post("/fetchQuestions", async(req, res) => {
 
     connexio.iniciar();
 
-    
+
     ret = await QuestionsFromJson();
 
     console.log("Ret:", ret);
 
-   res.send(ret);
+    res.send(ret);
 
 
 
@@ -77,43 +77,43 @@ app.post("/fetchQuestions", async(req, res) => {
 const upload = multer({ storage: storage });
 
 app.post(
-  "/saveprofileimage",
-  upload.single("profileImage"),
-  async (req, res) => {
-    try {
-      const client = await MongoClient.connect(mongoUri);
-      const db = client.db();
-      const collection = db.collection("images");
-      const result = await collection.insertOne({
-        name: req.file.filename,
-        path: req.file.path,
-      });
-      client.close();
-      res.send({ message: "Image uploaded successfully" });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({ message: "Error uploading image" });
+    "/saveprofileimage",
+    upload.single("profileImage"),
+    async(req, res) => {
+        try {
+            const client = await MongoClient.connect(mongoUri);
+            const db = client.db();
+            const collection = db.collection("images");
+            const result = await collection.insertOne({
+                name: req.file.filename,
+                path: req.file.path,
+            });
+            client.close();
+            res.send({ message: "Image uploaded successfully" });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({ message: "Error uploading image" });
+        }
     }
-  }
 );
 
-app.delete("/deleteprofileimage", async (req, res) => {
-  try {
-    const client = await MongoClient.connect(mongoUri);
-    const db = client.db();
-    const collection = db.collection("images");
-    const result = await collection.deleteMany({});
-    client.close();
-    res.send({ message: "Image deleted successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: "Error deleting image" });
-  }
+app.delete("/deleteprofileimage", async(req, res) => {
+    try {
+        const client = await MongoClient.connect(mongoUri);
+        const db = client.db();
+        const collection = db.collection("images");
+        const result = await collection.deleteMany({});
+        client.close();
+        res.send({ message: "Image deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: "Error deleting image" });
+    }
 });
 
 
 
-const PORT = 3012;
+const PORT = 3000;
 app.use(bodyParser.json());
 var users = [];
 
@@ -497,7 +497,7 @@ app.listen(PORT, () => {
 
 
 const questionsCollection = require('../schema/questionschema.js');
-async function QuestionsFromJson(){
+async function QuestionsFromJson() {
     let questions = await questionsCollection.questionModel.find();
     console.log(JSON.stringify(questions));
     return questions;
@@ -604,11 +604,16 @@ async function retornaUsers() {
 app.post("/saveStats", (req, res) => {
 
 
+    connexio.iniciar();
+
+
     let playerNewStats = {
-        investedSeconds: req.body.investedSeconds / 1000,
+        investedSeconds: req.body.gameTime,
         rounds: req.body.rounds,
         deads: req.body.deads
     }
+
+    let nomUsuari = req.body.userName;
 
     adminUsers.updatePlayerAsync(nomUsuari, playerNewStats);
 

@@ -517,12 +517,13 @@ async function checkUserFromJson(name, passwd) {
         name: ""
     };
 
-    console.log("Nom passat: " + name);
+    //console.log("Nom: " + name);
+    //console.log("Contrasenya: " + passwd);
 
     var prom = await new Promise(async(resolve, reject) => {
 
         try {
-            query = await adminUsers.findEmailAsync(name);
+            query = await adminUsers.findPlayerAsync1(name);
 
             console.log("Query: ", query);
 
@@ -537,9 +538,10 @@ async function checkUserFromJson(name, passwd) {
 
             try {
                 //console.log("AAAAAAAAAAAA")
+                //console.log("PWD " + query.pwd)
                 console.log("SALT " + query.salt)
                 contrasenyaAComprovar = await hashPassword(passwd, query.salt);
-
+                //console.log("ContrasenyaComrpovar " + contrasenyaAComprovar)
 
             } catch (err) {
                 console.log(err);
@@ -550,10 +552,10 @@ async function checkUserFromJson(name, passwd) {
             contrasenyaBase = query.pwd;
             ret.roles = ['user'];
 
-
-
-            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
-
+            
+            //console.log("QUERY.NAME "+query.name)
+            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+                //console.log("CUMPLECONDITIONS")
                 ret.isAuth = true;
 
 

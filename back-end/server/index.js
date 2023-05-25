@@ -287,7 +287,7 @@ app.post('/registerUserAndroid', async(req, res) => {
 
     //AÑADIR metodo por si user no existe 
     if (emailRegex.test(email) && pswdRegex.test(passwd) && usernameRegex.test(nom)) {
-        let existingPlayer = await adminUsers.findPlayerAsync(nom);
+        let existingPlayer = await adminUsers.findPlayerAsync1(nom);
         let existingEmail = await adminUsers.findEmailAsync(email);
         console.log("existingPlayer: ", existingPlayer);
 

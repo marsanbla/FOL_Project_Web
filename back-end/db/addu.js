@@ -75,7 +75,7 @@ async function findPlayerAsync(Username) {
     console.log("Ha entrat a findPlayer");
 
     let usernameTrobat = false;
-    let existingPlayerUserName = await playersCollection.playerModel.findOne({ name: name }).exec();
+    let existingPlayerUserName = await playersCollection.playerModel.findOne({ name: Username }).exec();
 
 
     if (existingPlayerUserName != null) {
@@ -116,7 +116,7 @@ async function findEmailAsync(email) {
         emailTrobat = true
     }
 
-    console.log("Salt dins findEmail: ", existingPlayerEmail.query);
+    console.log("Salt dins findEmail: ", existingPlayerEmail);
 
     return existingPlayerEmail;
 }

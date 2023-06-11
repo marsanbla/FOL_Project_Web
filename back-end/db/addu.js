@@ -37,9 +37,10 @@ async function updatePlayerAsync(idPlayer, playerNewStats) {
     const filter = { name: idPlayer };
 
     const update = {
-        investedSeconds: playerNewStats.investedSeconds,
+        gameTime: playerNewStats.investedSeconds,
         rounds: playerNewStats.rounds,
-        deads: playerNewStats.deads
+        deads: playerNewStats.deads,
+        points:playerNewStats.totalPoints
 
     }
 

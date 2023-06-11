@@ -611,6 +611,8 @@ app.post("/saveStats", (req, res) => {
 
     let playerNewStats = {
         investedSeconds: req.body.gameTime,
+        score:req.body.score,
+        totalPoints: req.body.totalPoints,
         rounds: req.body.rounds,
         deads: req.body.deads
     }

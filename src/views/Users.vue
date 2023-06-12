@@ -1,12 +1,10 @@
 <template>
   <div id="tab-2" class="tab-pane margin_top">
-   
-
     <table class="default margin_top">
       <tr>
-        <th class="nomus">Nom usuari</th>
+        <th class="nomus">Index</th>
 
-        <th>Rol</th>
+        <th>Nom usuari</th>
       </tr>
 
       <tr v-for="(u, index) in usuaris" :key="u.name">
@@ -17,8 +15,10 @@
         <td>{{ u.rol }}</td>
 
         <td>
-          
+          <button @click="confirmDelete(u.name)">Delete</button>
         </td>
+
+        <td></td>
       </tr>
     </table>
   </div>
@@ -38,7 +38,7 @@
   background-color: #005fa3;
 }
 
-.margin_top{
+.margin_top {
   margin-top: 10vw;
 }
 .table-container {
@@ -88,7 +88,6 @@ tr:hover {
 }
 </style>
 <script>
-
 export default {
   mounted() {
     this.getUserList();
@@ -116,6 +115,21 @@ export default {
     reverseMessage() {
       this.message = this.message.split("").reverse().join("");
     },
+    doPromiseFetchPost(url, data, callback) {
+      //this.loading = true;
+
+      var promResponse = fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+        mode: "cors",
+        cache: "default",
+      });
+      return promResponse;
+    },
     doFetchPost(url, data, callback) {
       this.loading = true;
 
@@ -132,7 +146,8 @@ export default {
         .then((response) => {
           console.log(response);
           return response.json();
-        }).then((data) => {
+        })
+        .then((data) => {
           this.postData = data;
           setTimeout(() => {
             callback(); // invoke the callback function here
@@ -142,22 +157,72 @@ export default {
           console.log(error);
         });
     },
-    getUserList() {
+    async getUserList() {
       console.log("Ha entrat a get UserList");
       let data = {
         username: this.username,
-        passwd: this.passwd
-      }
+        passwd: this.passwd,
+      };
       let callback = () => {
         this.snackbar = true;
-        console.log("POSTDATA" + this.postData)
-        this.usuaris = this.postData
-
+        console.log("POSTDATA" + this.postData);
+        this.usuaris = this.postData;
       };
       console.log("FETCH userpost");
-      this.doFetchPost("http://localhost:3012/usersPost1", data, callback);
+      var response=await  this.doPromiseFetchPost("http://localhost:3000/usersPost1", data, callback);
+      data=this.doDataFromResponse(response);
+      this.users=data;
       console.log("HOLA");
     },
+    async doDataFromResponse(response) {
+      var data = await response.json();
+
+      return data;
+    },
+    deleteUser(nomUsuari) {
+      let callback = () => {
+        console.log("Ha entrat a delete post");
+
+        this.getUserList();
+        this.characters = false;
+        this.settings = false;
+        this.stats = false;
+        this.verpagina = false;
+        this.users = true;
+        this.snackbar = true;
+        this.loginpage = false;
+
+        this.usuaris = this.postData;
+
+        console.log("usuaris del post data dins userpost", this.postData);
+
+        console.log("usuaris dins userpost", this.username);
+        window.dataUser = this;
+
+        /*if (this.postData.users) {
+          this.text = "Autoritzat. Roles => " + this.postData.roles;
+          this.auth = true;
+          this.verpagina=true;
+          console.log('dins get auth post auth this.aut= ',this.auth);
+        } else {
+          this.text = "No autoritzat";
+        }*/
+        //this.loading = false;
+      };
+
+      this.doFetchPost(
+        "http://localhost:3000/deletePost",
+        { userid: nomUsuari },
+        callback
+      );
+    },
+
+    confirmDelete(nomUsuari) {
+      if (window.confirm("Are you sure you want to delete this data?")) {
+        this.deleteUser(nomUsuari);
+      }
+    },
+
     deletePost(name, rol) {
       // delete post logic here
     },

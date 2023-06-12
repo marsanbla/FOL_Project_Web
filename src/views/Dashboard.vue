@@ -73,8 +73,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Mario Santos</td>
+          <tr usuaris.length>
+            <td>{{ usuaris[0].name }}</td>
             <td class="sucess">Admin</td>
             <td>
               <button class="material-icons-sharp">delete</button>
@@ -93,8 +93,21 @@
   </div>
 </template>
 
-<style>
+<script>
+import Users from "./Users.vue";
+export default {
+  async mounted() {
+    await Users.methods.getUserList();
+    console.log("Nom: ",usuaris[0].name);
+  },
+  data() {
+    return {
+      usuaris: [],
+      postData: null,
+    };
+  },
+  methods: {},
+};
+</script>
 
-
-
-</style>
+<style></style>

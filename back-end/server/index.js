@@ -113,7 +113,7 @@ app.delete("/deleteprofileimage", async(req, res) => {
 
 
 
-const PORT = 3012;
+const PORT = 3000;
 app.use(bodyParser.json());
 var users = [];
 
@@ -554,7 +554,7 @@ async function checkUserFromJson(name, passwd) {
 
             
             //console.log("QUERY.NAME "+query.name)
-            if (name == query.name && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
+            if (name == query.email && contrasenyaAComprovar == contrasenyaBase && contrasenyaAComprovar != "" && name != "") {
                 //console.log("CUMPLECONDITIONS")
                 ret.isAuth = true;
 

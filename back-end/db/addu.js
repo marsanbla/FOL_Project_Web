@@ -91,7 +91,7 @@ async function findPlayerAsync1(name) {
     console.log("Ha entrat a findPlayer1");
     let res = null;
     let usernameTrobat = false;
-    let existingPlayer = await playersCollection.playerModel.findOne({ name: name }).exec();
+    let existingPlayer = await playersCollection.playerModel.findOne({ email: name }).exec();
 
     console.log("Existing player: ", existingPlayer);
 
